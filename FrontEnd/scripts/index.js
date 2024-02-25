@@ -16,6 +16,7 @@ const init = async () => {
   }); // Ajoute un nouvel item dans le array
   console.log("🚀 ~ init ~ finalResponseCat:", finalResponseCat);
   console.log("🚀 ~ init ~ finalResponseWorks:", finalResponseWorks);
+
   displayWorks(finalResponseWorks);
   allWorks = finalResponseWorks;
   displayButtons(finalResponseCat);
@@ -63,7 +64,8 @@ function displayWorks(works) {
 // Étape 3 : Ajouter les méthodes display pour afficher les boutons
 function displayButtons(categories) {
   const filters = document.querySelector(".buttons");
-  filters.innerHTML = ""; // Efface le contenu précédent de la filtersigation
+  filters.innerHTML = "";
+
   categories.forEach((category) => {
     const li = document.createElement("li"); // À changer par une creation d'élément avec createElement
     const button = document.createElement("button");
@@ -90,3 +92,17 @@ const filterWorksByCategory = (id) => {
     displayWorks(allWorks);
   }
 };
+
+const buttons = document.querySelectorAll("button");
+
+buttons.forEach((button) => {
+  button.addEventListener("click", function () {
+    // Supprime la classe 'active' de tous les boutons
+    buttons.forEach((btn) => {
+      btn.classList.remove("active");
+    });
+
+    // Ajoute la classe 'active' au bouton cliqué
+    this.classList.add("active");
+  });
+});

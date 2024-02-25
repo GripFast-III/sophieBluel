@@ -168,6 +168,12 @@ button:hover {
 	transition: 0.4s;
 }
 
+button:active {
+	cursor: pointer;
+	background-color: #1D6154;
+	color:#FFFFFF;
+}
+
 .gallery {
 	width: 100%;
 	display: grid;
@@ -294,4 +300,13 @@ footer nav ul:hover{
 .password a:hover {
 	cursor: pointer;
 	color:black;
+}
+
+#error-message {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 25px;
+	width: 100%;
+	height: 50px;
 }
