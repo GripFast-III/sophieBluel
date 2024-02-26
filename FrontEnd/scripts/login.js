@@ -27,18 +27,14 @@ document
       console.log("Réponse du serveur:", response);
 
       if (response.ok) {
-        //console.log("🚀 ~ .addEventListener ~ response:", response);
+        // console.log("🚀 ~ .addEventListener ~ response:", response);
         console.log("Connexion réussie");
         let data = await response.json();
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("token", JSON.stringify(data));
 
+        // L'utilisateur est connecté avec succès et est redirigé vers index.html
+        window.location.href = "index.html";
         console.log("🚀 ~ .addEventListener ~ data:", data);
-        if (localStorage.getItem("token")) {
-          // Masque le formulaire de connexion
-          document.getElementById("login").style.display = "none";
-          // L'utilisateur est connecté avec succès et est redirigé vers index.html
-          window.location.href = "index.html";
-        }
       } else {
         // Si le serveur renvoie une erreur, cela lance le message d'erreur
         const errorData = await response.json();

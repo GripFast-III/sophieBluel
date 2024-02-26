@@ -1,4 +1,5 @@
 let allWorks = [];
+let globalToken = null;
 
 const init = async () => {
   let finalResponseCat = await fetchCategories();
@@ -19,7 +20,17 @@ const init = async () => {
 
   displayWorks(finalResponseWorks);
   allWorks = finalResponseWorks;
-  displayButtons(finalResponseCat);
+  let iAmConnected = isConnected();
+  if (iAmConnected) {
+    console.log("créer le bouton modifier");
+    console.log("insérer le bandeau noir en haut de l'écran");
+    console.log("modifier le 'login' en 'logout'");
+    console.log(
+      "ajouter un événement au 'logout' pour réellement se logout => local storage => remove item du token + refresh la page pour retourner à la page normale"
+    );
+  } else {
+    displayButtons(finalResponseCat);
+  }
 };
 
 init();
@@ -71,6 +82,8 @@ function displayButtons(categories) {
     const button = document.createElement("button");
     const paragraph = document.createElement("p"); // Crée un élément <p>
     const buttonText = document.createTextNode(category.name); // Crée un nœud texte avec le nom de la catégorie
+    if (category.id == 0) button.classList.add("active");
+    button.dataset.idCategory = category.id;
 
     button.addEventListener("click", () => filterWorksByCategory(category.id));
     //button.textContent = category.name;
@@ -106,3 +119,17 @@ buttons.forEach((button) => {
     this.classList.add("active");
   });
 });
+
+// Méthode check connexion
+const isConnected = () => {
+  const token = localStorage.getItem("token");
+  if (token.length) {
+    const objectToken = JSON.parse(token);
+    console.log("🚀 ~ isConnected ~ objectToken:", objectToken);
+    globalToken = objectToken.token;
+
+    return true;
+  } else {
+    return false;
+  }
+};

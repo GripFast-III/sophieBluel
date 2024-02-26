@@ -168,7 +168,7 @@ button:hover {
 	transition: 0.4s;
 }
 
-button:active {
+.buttons .active {
 	cursor: pointer;
 	background-color: #1D6154;
 	color:#FFFFFF;
