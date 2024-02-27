@@ -49,7 +49,22 @@ table {
 }
 /** end reset css**/
 
+.black-bar {
+	display: inline-block;
+	background-color: black;
+	width: 100%;
+	height: 50px;
+}
 
+
+.edit-mode-container {
+	display: flex;
+	justify-content: center;
+	color: white;
+	height: 50px;
+	align-items: center;
+	gap: 1rem;
+}
 body {
 	max-width: 1140px;
 	margin:auto;
@@ -136,7 +151,29 @@ li:hover {
 }
 #portfolio h2 {
 	text-align: center;
-	margin-bottom: 1em;
+	/*margin-bottom: 1em;*/
+}
+
+.project-and-icon{
+	display: flex;
+	justify-content: center;
+}
+
+.fa-pen-to-square {
+	align-self: center;
+	margin-left: 20px;
+	font-weight: normal;
+}
+
+.modifier-text {
+	padding-left: 10px;
+	align-self: center;
+}
+
+.fa-pen-to-square:hover,
+.modifier-text:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .buttons {

@@ -4,12 +4,6 @@ let globalToken = null;
 const init = async () => {
   let finalResponseCat = await fetchCategories();
   let finalResponseWorks = await fetchWorks();
-  //await (
-  //await fetch("http://localhost:5678/api/categories")
-  //).json();
-  //let response = await fetch("http://localhost:5678/api/categories");
-  //let finalResponse = await response.json();
-  //Ces deux lignes sont représentées par la ligne 2
 
   finalResponseCat.unshift({
     id: 0,
@@ -22,15 +16,73 @@ const init = async () => {
   allWorks = finalResponseWorks;
   let iAmConnected = isConnected();
   if (iAmConnected) {
+    // Appelle la fonction pour ajouter l'icône à côté du titre "Mes Projets"
+    addIconToTitle();
     console.log("créer le bouton modifier");
+    showBlackBar();
+    addEditModeIconAndText();
     console.log("insérer le bandeau noir en haut de l'écran");
+
     console.log("modifier le 'login' en 'logout'");
+
     console.log(
       "ajouter un événement au 'logout' pour réellement se logout => local storage => remove item du token + refresh la page pour retourner à la page normale"
     );
   } else {
     displayButtons(finalResponseCat);
   }
+};
+
+const addIconToTitle = () => {
+  // Crée un élément <i> pour l'icône "modifier"
+  const icon = document.createElement("i");
+  // Ajoute la classe d'icône fa-regular fa-pen-to-square
+  icon.classList.add("fa-solid", "fa-pen-to-square");
+
+  // Crée un élément <span> pour le texte "modifier"
+  const text = document.createElement("span");
+  text.textContent = "modifier";
+  // Ajoute une classe au <span>
+  text.classList.add("modifier-text");
+
+  // Sélectionne l'élément h2 contenant le titre "Mes Projets"
+  const titleElement = document.getElementById("project-and-icon");
+
+  // Ajoute l'icône à côté du titre "Mes Projets"
+  titleElement.appendChild(icon);
+  titleElement.appendChild(text);
+};
+
+const showBlackBar = () => {
+  // Crée une div pour le bandeau noir
+  const blackBar = document.createElement("div");
+  // Ajoute les styles CSS
+  blackBar.classList.add("black-bar");
+  // Insérer le bandeau noir avant le body
+  document.body.insertBefore(blackBar, document.body.firstChild);
+};
+
+const addEditModeIconAndText = () => {
+  // Créer un élément <i> pour l'icône "Mode édition"
+  const icon = document.createElement("i");
+  // Ajouter les classes d'icône appropriées
+  icon.classList.add("fa-solid", "fa-pen-to-square");
+
+  // Créer un élément <span> pour le texte "Mode édition"
+  const textSpan = document.createElement("span");
+  textSpan.textContent = "Mode édition";
+
+  // Créer un élément <div> pour contenir l'icône et le texte
+  const editModeContainer = document.createElement("div");
+  editModeContainer.classList.add("edit-mode-container");
+
+  // Ajouter l'icône et le texte au conteneur
+  editModeContainer.appendChild(icon);
+  editModeContainer.appendChild(textSpan);
+
+  // Ajouter le conteneur à la black bar
+  const blackBar = document.querySelector(".black-bar");
+  blackBar.appendChild(editModeContainer);
 };
 
 init();
