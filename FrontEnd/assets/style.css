@@ -65,12 +65,14 @@ table {
 	align-items: center;
 	gap: 1rem;
 }
+
 body {
 	max-width: 1140px;
 	margin:auto;
 	font-family: 'Work Sans' ;
 	font-size: 14px;
 }
+
 header {
 	display: flex;
 	justify-content: space-between;
@@ -170,11 +172,14 @@ li:hover {
 	align-self: center;
 }
 
-.fa-pen-to-square:hover,
 .modifier-text:hover {
   cursor: pointer;
   text-decoration: underline;
 }
+
+/*.fa-pen-to-square:hover{
+	cursor: pointer;
+}*/
 
 .buttons {
 	list-style: none;

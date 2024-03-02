@@ -22,7 +22,7 @@ const init = async () => {
     showBlackBar();
     addEditModeIconAndText();
     console.log("insérer le bandeau noir en haut de l'écran");
-
+    updateLoginLink();
     console.log("modifier le 'login' en 'logout'");
 
     console.log(
@@ -184,4 +184,21 @@ const isConnected = () => {
   } else {
     return false;
   }
+};
+
+// Méthodes de login et logout
+const updateLoginLink = () => {
+  const loginLink = document.querySelector("nav ul li:nth-child(3) a");
+  if (loginLink) {
+    loginLink.textContent = "logout";
+    loginLink.href = "#"; // Remplacez '#' par l'URL de déconnexion si nécessaire
+    loginLink.addEventListener("click", handleLogout);
+  }
+};
+
+const handleLogout = () => {
+  // Supprime le token du stockage local
+  localStorage.removeItem("token");
+  // Recharge la page pour revenir à l'état initial => page d'accueil normale
+  location.reload();
 };
