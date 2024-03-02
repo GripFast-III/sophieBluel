@@ -56,10 +56,33 @@
       <section id="portfolio">
         <div class="project-and-icon" id="project-and-icon">
           <h2 id="my-projects">Mes Projets</h2>
+          <div class="modifier-clic"></div>
         </div>
         <div class="buttons"></div>
+
+        <!-- Modale -->
+        <div id="myModal" class="modal">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Galerie photo</h2>
+            <div class="galerie-modale"></div>
+            <div class="submitted">
+              <button
+                class="btn-submit"
+                class="btn-close"
+                id="return"
+                type="submit"
+                onclick="return closeModal()"
+              >
+                Ajouter une photo
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div class="gallery"></div>
       </section>
+
       <section id="contact">
         <h2>Contact</h2>
         <p>Vous avez un projet ? Discutons-en !</p>

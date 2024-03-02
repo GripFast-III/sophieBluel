@@ -18,22 +18,24 @@ const init = async () => {
   if (iAmConnected) {
     // Appelle la fonction pour ajouter l'icône à côté du titre "Mes Projets"
     addIconToTitle();
-    console.log("créer le bouton modifier");
     showBlackBar();
     addEditModeIconAndText();
-    console.log("insérer le bandeau noir en haut de l'écran");
     updateLoginLink();
-    console.log("modifier le 'login' en 'logout'");
-
-    console.log(
-      "ajouter un événement au 'logout' pour réellement se logout => local storage => remove item du token + refresh la page pour retourner à la page normale"
-    );
   } else {
     displayButtons(finalResponseCat);
   }
 };
 
 const addIconToTitle = () => {
+  // Vérifie d'abord si des éléments "modifier" existent déjà
+  const existingModifierText = document.querySelector(
+    ".modifier-clic .modifier-text"
+  );
+  if (existingModifierText) {
+    return; // Si oui, sort de la fonction si des éléments existent déjà et évite de créer un doublon
+  }
+
+  const parentDiv = document.querySelector(".modifier-clic");
   // Crée un élément <i> pour l'icône "modifier"
   const icon = document.createElement("i");
   // Ajoute la classe d'icône fa-regular fa-pen-to-square
@@ -45,13 +47,22 @@ const addIconToTitle = () => {
   // Ajoute une classe au <span>
   text.classList.add("modifier-text");
 
-  // Sélectionne l'élément h2 contenant le titre "Mes Projets"
-  const titleElement = document.getElementById("project-and-icon");
-
-  // Ajoute l'icône à côté du titre "Mes Projets"
-  titleElement.appendChild(icon);
-  titleElement.appendChild(text);
+  // Ajoute l'icône et le texte à la div parente
+  parentDiv.appendChild(icon);
+  parentDiv.appendChild(text);
 };
+
+// Appel de la fonction pour ajouter les éléments "modifier"
+addIconToTitle();
+
+// Ajout de l'événement de clic à la div parente
+document
+  .querySelector(".modifier-clic")
+  .addEventListener("click", function (event) {
+    if (event.target && event.target.matches(".modifier-text")) {
+      displayModal();
+    }
+  });
 
 const showBlackBar = () => {
   // Crée une div pour le bandeau noir
@@ -175,7 +186,7 @@ buttons.forEach((button) => {
 // Méthode check connexion
 const isConnected = () => {
   const token = localStorage.getItem("token");
-  if (token.length) {
+  if (token && token.length) {
     const objectToken = JSON.parse(token);
     console.log("🚀 ~ isConnected ~ objectToken:", objectToken);
     globalToken = objectToken.token;
@@ -202,3 +213,50 @@ const handleLogout = () => {
   // Recharge la page pour revenir à l'état initial => page d'accueil normale
   location.reload();
 };
+
+// Gestion de la modale
+// Affiche la modale
+const displayModal = () => {
+  document.getElementById("myModal").style.display = "block";
+};
+
+// Masque la modale
+const closeModal = () => {
+  document.getElementById("myModal").style.display = "none";
+};
+
+// Ajoute un écouteur d'événements sur l'élément "modifier"
+document
+  .querySelector(".modifier-text")
+  .addEventListener("click", displayModal);
+
+// Ajoute un écouteur d'événements sur l'icône de fermeture de la modale
+document.querySelector(".close").addEventListener("click", closeModal);
+
+// Ajoute un écouteur d'événements sur le fond semi-transparent de la modale pour détecter les clics à l'extérieur de la modale
+window.addEventListener("click", (event) => {
+  const modal = document.getElementById("myModal");
+  if (event.target === modal) {
+    closeModal();
+  }
+});
+
+/*// Ajoutez un événement de clic au texte "modifier" pour ouvrir la modale
+document.querySelector(".modifier-text").addEventListener("click", function () {
+  // Affiche la modale
+  document.getElementById("myModal").style.display = "block";
+});
+
+// Ajoutez un événement pour fermer la modale lorsque l'utilisateur clique sur le bouton de fermeture
+document.querySelector(".close").addEventListener("click", function () {
+  // Masque la modale
+  document.getElementById("myModal").style.display = "none";
+});
+
+// Ajoutez un événement pour fermer la modale lorsque l'utilisateur clique en dehors de la modale
+window.addEventListener("click", function (event) {
+  const modal = document.getElementById("myModal");
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+});*/
