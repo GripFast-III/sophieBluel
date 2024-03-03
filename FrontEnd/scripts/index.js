@@ -218,12 +218,29 @@ const handleLogout = () => {
 // Affiche la modale
 const displayModal = () => {
   document.getElementById("myModal").style.display = "block";
+  document.getElementById("modalBackground").style.display = "block";
 };
 
 // Masque la modale
 const closeModal = () => {
   document.getElementById("myModal").style.display = "none";
+  document.getElementById("modalBackground").style.display = "none";
 };
+
+// Récupérez la référence de la modale
+const modal = document.getElementById("myModal");
+
+// Ajoutez un événement de clic à la modale pour empêcher la propagation des clics à ses éléments enfants
+modal.addEventListener("click", function (event) {
+  event.stopPropagation();
+});
+
+// Ajoutez également un événement de clic à l'arrière-plan pour fermer la modale lorsqu'il est cliqué
+document
+  .getElementById("modalBackground")
+  .addEventListener("click", function (event) {
+    closeModal(); // Ferme la modale
+  });
 
 // Ajoute un écouteur d'événements sur l'élément "modifier"
 document
@@ -233,30 +250,10 @@ document
 // Ajoute un écouteur d'événements sur l'icône de fermeture de la modale
 document.querySelector(".close").addEventListener("click", closeModal);
 
-// Ajoute un écouteur d'événements sur le fond semi-transparent de la modale pour détecter les clics à l'extérieur de la modale
+// Ajoutez un écouteur d'événements sur le fond semi-transparent de la modale pour détecter les clics à l'extérieur de la modale
 window.addEventListener("click", (event) => {
   const modal = document.getElementById("myModal");
   if (event.target === modal) {
     closeModal();
   }
 });
-
-/*// Ajoutez un événement de clic au texte "modifier" pour ouvrir la modale
-document.querySelector(".modifier-text").addEventListener("click", function () {
-  // Affiche la modale
-  document.getElementById("myModal").style.display = "block";
-});
-
-// Ajoutez un événement pour fermer la modale lorsque l'utilisateur clique sur le bouton de fermeture
-document.querySelector(".close").addEventListener("click", function () {
-  // Masque la modale
-  document.getElementById("myModal").style.display = "none";
-});
-
-// Ajoutez un événement pour fermer la modale lorsque l'utilisateur clique en dehors de la modale
-window.addEventListener("click", function (event) {
-  const modal = document.getElementById("myModal");
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-});*/
