@@ -56,7 +56,6 @@ table {
 	height: 50px;
 }
 
-
 .edit-mode-container {
 	display: flex;
 	justify-content: center;
@@ -64,6 +63,12 @@ table {
 	height: 50px;
 	align-items: center;
 	gap: 1rem;
+}
+
+.project-and-icon .edit-mode-container {
+	color: black;
+	height: 0px;
+	cursor: pointer;
 }
 
 body {

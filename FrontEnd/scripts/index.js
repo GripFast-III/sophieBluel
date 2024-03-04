@@ -17,10 +17,17 @@ const init = async () => {
   let iAmConnected = isConnected();
   if (iAmConnected) {
     // Appelle la fonction pour ajouter l'icône à côté du titre "Mes Projets"
-    addIconToTitle();
     showBlackBar();
-    addEditModeIconAndText();
+    //addEditModeIconAndText();
     updateLoginLink();
+    // Ajout de l'événement de clic à la div parente
+    document
+      .querySelector(".modifier-clic")
+      .addEventListener("click", function (event) {
+        if (event.target && event.target.matches(".modifier-text")) {
+          displayModal();
+        }
+      });
   } else {
     displayButtons(finalResponseCat);
   }
@@ -52,25 +59,21 @@ const addIconToTitle = () => {
   parentDiv.appendChild(text);
 };
 
-// Appel de la fonction pour ajouter les éléments "modifier"
-addIconToTitle();
-
-// Ajout de l'événement de clic à la div parente
-document
-  .querySelector(".modifier-clic")
-  .addEventListener("click", function (event) {
-    if (event.target && event.target.matches(".modifier-text")) {
-      displayModal();
-    }
-  });
-
 const showBlackBar = () => {
   // Crée une div pour le bandeau noir
   const blackBar = document.createElement("div");
+  const modifierClicContainer = document.createElement("div");
   // Ajoute les styles CSS
   blackBar.classList.add("black-bar");
+  modifierClicContainer.classList.add("modifier-clic");
+  const template = `<div class="edit-mode-container"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i><span>Mode édition</span></div>`;
+  blackBar.innerHTML = template;
+  modifierClicContainer.innerHTML = template;
+  modifierClicContainer.addEventListener("click", () => displayModal());
   // Insérer le bandeau noir avant le body
   document.body.insertBefore(blackBar, document.body.firstChild);
+  const targetTitle = document.querySelector("#project-and-icon");
+  targetTitle.appendChild(modifierClicContainer);
 };
 
 const addEditModeIconAndText = () => {
@@ -131,7 +134,7 @@ function displayWorks(works) {
   gallery.innerHTML = ""; // Efface le contenu précédent de la galerie
   works.forEach((work) => {
     const figure = document.createElement("figure");
-    figure.setAttribute("data-categories", work.categoryId);
+    figure.dataset.id = work.id;
     figure.innerHTML = `<img src="${work.imageUrl}" alt="${work.title}"/ ><figcaption>${work.title}</figcaption>`;
     gallery.appendChild(figure);
   });
@@ -279,14 +282,14 @@ const displayModal = () => {
       const figure = this.closest("figure");
 
       // Récupére la valeur de data-categories de la <figure>
-      const categoryValue = figure.dataset.categories;
+      const categoryValue = figure.dataset.id;
 
       // Supprime la <figure> de la modale
       figure.remove();
 
       // Supprime également l'élément correspondant sur la page principale
       const mainPageFigures = document.querySelectorAll(
-        `.gallery figure[data-categories="${categoryValue}"]`
+        `.gallery figure[data-id="${categoryValue}"]`
       );
       if (mainPageFigures) {
         mainPageFigures.forEach((mainPageFigure) => {
@@ -305,9 +308,6 @@ const displayModal = () => {
     modal.style.display = "none";
     modalBackground.style.display = "none";
   };
-
-  // Récupére la référence de la modale
-  //const modal = document.getElementById("myModal");
 
   // Ajoute un événement de clic à la modale pour empêcher la propagation des clics aux éléments enfants
   modal.addEventListener("click", function (event) {
