@@ -232,29 +232,29 @@ const displayModal = () => {
   // Insère la galerie clonée dans la galerie de la modale
   galleryModal.appendChild(clonedGallery);
 
-  // Affiche la modale et le fond semi-transparent
+  // Affiche la modale et le fond semi-transparent gris (vu en css)
   modal.style.display = "block";
   modalBackground.style.display = "block";
 
-  // Sélectionnez tous les éléments <figure> dans votre modal
+  // Sélectionne tous les éléments <figure> dans la modal
   const figures = document.querySelectorAll(".gallery-modal figure");
 
-  // Pour chaque figure, créez une div trash-icon et ajoutez-y une icône de poubelle
+  // Création d'une <div class="trash-icon"> pour chaque image dans la modale
   figures.forEach((figure) => {
     // Vérifie si la figure contient déjà une icône de poubelle
     if (!figure.querySelector(".trash-icon")) {
-      // Créez une nouvelle div trash-icon
+      // Créé une <div class="trash-icon">
       const trashIconDiv = document.createElement("div");
       trashIconDiv.classList.add("trash-icon");
 
-      // Créez une icône de poubelle <i> et ajoutez-lui les classes appropriées
+      // Créé une icône trashcan et ajoute la classe appropriée
       const trashIcon = document.createElement("i");
       trashIcon.classList.add("fa-solid", "fa-trash-can");
 
-      // Ajoutez l'icône de poubelle à la div trash-icon
+      // Ajoute la <i class="fa-solid fa-trash-can"> à la <div class="trash-icon">
       trashIconDiv.appendChild(trashIcon);
 
-      // Ajoutez la div trash-icon à la figure
+      // Ajoute la <div class="trash-icon" aux <figure>
       figure.appendChild(trashIconDiv);
     }
   });
@@ -269,15 +269,15 @@ const displayModal = () => {
     modalBackground.style.display = "none";
   };
 
-  // Récupérez la référence de la modale
+  // Récupére la référence de la modale
   //const modal = document.getElementById("myModal");
 
-  // Ajoutez un événement de clic à la modale pour empêcher la propagation des clics à ses éléments enfants
+  // Ajoute un événement de clic à la modale pour empêcher la propagation des clics aux éléments enfants
   modal.addEventListener("click", function (event) {
     event.stopPropagation();
   });
 
-  // Ajoutez également un événement de clic à l'arrière-plan pour fermer la modale lorsqu'il est cliqué
+  // Ajoute un événement de clic à l'arrière-plan pour fermer la modale si on clique à côté
   document
     .getElementById("modalBackground")
     .addEventListener("click", function (event) {
@@ -292,11 +292,11 @@ const displayModal = () => {
   // Ajoute un écouteur d'événements sur l'icône de fermeture de la modale
   document.querySelector(".close").addEventListener("click", closeModal);
 
-  // Ajoutez un écouteur d'événements sur le fond semi-transparent de la modale pour détecter les clics à l'extérieur de la modale et fermer la modale
+  /*// Ajoute un écouteur d'événements sur le fond semi-transparent de la modale pour détecter les clics à l'extérieur de la modale et fermer la modale
   window.addEventListener("click", (event) => {
     const modal = document.getElementById("myModal");
     if (event.target === modal) {
       closeModal();
     }
-  });
+  });*/
 };
