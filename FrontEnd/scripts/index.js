@@ -259,6 +259,43 @@ const displayModal = () => {
     }
   });
 
+  // Sélectionne toutes les icônes de trash-icon dans la modal
+  const trashIcons = document.querySelectorAll(".trash-icon");
+
+  // Ajoute un gestionnaire d'événements de clic à chaque icône
+  trashIcons.forEach((trashIcon) => {
+    trashIcon.addEventListener("click", function () {
+      const figure = this.closest("figure");
+
+      // Supprime la <figure> de la modale
+      figure.remove();
+    });
+  });
+
+  // Suppression des éléments <figure> de la modale et donc de la page
+  trashIcons.forEach((trashIcon) => {
+    trashIcon.addEventListener("click", function () {
+      // Récupération de l'élément parent de trash-icon
+      const figure = this.closest("figure");
+
+      // Récupére la valeur de data-categories de la <figure>
+      const categoryValue = figure.dataset.categories;
+
+      // Supprime la <figure> de la modale
+      figure.remove();
+
+      // Supprime également l'élément correspondant sur la page principale
+      const mainPageFigures = document.querySelectorAll(
+        `.gallery figure[data-categories="${categoryValue}"]`
+      );
+      if (mainPageFigures) {
+        mainPageFigures.forEach((mainPageFigure) => {
+          mainPageFigure.remove();
+        });
+      }
+    });
+  });
+
   // Masque la modale
   const closeModal = () => {
     const modal = document.getElementById("myModal");
