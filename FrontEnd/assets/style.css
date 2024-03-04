@@ -371,35 +371,21 @@ background-color: #fefefe;
 padding: 20px;
 border-radius: 5px;
 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+width: 630px;
 }
 
 .close {
 position: absolute;
-top: 10px;
+top: 30px;
 right: 10px;
 cursor: pointer;
+font-size: 24px;
 }
 
 #myModal {
-	width: 35rem;
-}
-
-.gallery-modal {
-	min-height: 15rem;
-}
-
-.submitted {
-	display: flex;
+	display: none;
 	justify-content: center;
-}
-
-#return {
-	width: 50%;
-	background-color: rgb(255, 255, 255);
-}
-
-#return:hover {
-	background-color: #1D6154;
+	width: 630px;
 }
 
 .modal-background {
@@ -412,3 +398,80 @@ cursor: pointer;
     z-index: 9998;
     display: none;
 }
+
+.submitted {
+	display: flex;
+	justify-content: center;
+}
+
+#return {
+	width: 35%;
+	background-color: rgb(255, 255, 255);
+}
+
+#return:hover {
+	background-color: #1D6154;
+}
+
+.modal-content h2 {
+	margin-bottom: 30px;
+	margin-top: 30px;
+}
+
+.gallery-modal {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	min-height: 15rem;
+	min-height: 15rem;
+	max-width: 450px;
+	overflow-y: auto;
+	width: 350px;
+	margin: auto;
+	margin-bottom: 25px;
+	gap: 5%;
+	height: 400px;
+}
+
+.gallery-modal .gallery figure {
+	width: 75px;
+	height: 102px;
+}
+
+.gallery-modal .gallery {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: left;
+	align-items: center;
+	gap: 10px;
+}
+
+.gallery-modal .gallery figure figcaption {
+	display: none;
+}
+
+.fa-trash-can {
+	position: relative;
+	left: 55px;
+	bottom: 96px;
+	background: black;
+	color: #FFF;
+	border-radius: 3px;
+	text-align: center;
+	width: 15px;
+	height: 15px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	font-size: 10px;
+}
+
+.separator {
+	border: none;
+	height: 1px;
+	background-color: black;
+	margin: 20px 140px 20px 140px;
+  }
+  

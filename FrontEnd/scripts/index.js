@@ -99,6 +99,7 @@ const addEditModeIconAndText = () => {
 init();
 
 // Etape 1 : Mettre en place les appels au back
+// Méthode de récupération des travaux dans le back
 async function fetchWorks() {
   try {
     const response = await fetch("http://localhost:5678/api/works");
@@ -112,6 +113,7 @@ async function fetchWorks() {
   }
 }
 
+// Méthode de récupération des catégories dans le back
 async function fetchCategories() {
   try {
     const response = await fetch("http://localhost:5678/api/categories");
@@ -197,7 +199,7 @@ const isConnected = () => {
   }
 };
 
-// Méthodes de login et logout
+// Méthodes du login
 const updateLoginLink = () => {
   const loginLink = document.querySelector("nav ul li:nth-child(3) a");
   if (loginLink) {
@@ -207,6 +209,7 @@ const updateLoginLink = () => {
   }
 };
 
+// Méthode du logout
 const handleLogout = () => {
   // Supprime le token du stockage local
   localStorage.removeItem("token");
@@ -217,43 +220,83 @@ const handleLogout = () => {
 // Gestion de la modale
 // Affiche la modale
 const displayModal = () => {
-  document.getElementById("myModal").style.display = "block";
-  document.getElementById("modalBackground").style.display = "block";
-};
+  const modal = document.getElementById("myModal");
+  const modalBackground = document.getElementById("modalBackground");
+  const gallery = document.querySelector(".gallery");
+  const clonedGallery = gallery.cloneNode(true); // Clone la galerie avec toutes les <figure>
 
-// Masque la modale
-const closeModal = () => {
-  document.getElementById("myModal").style.display = "none";
-  document.getElementById("modalBackground").style.display = "none";
-};
+  // Vide la galerie de la modale
+  const galleryModal = document.querySelector(".gallery-modal");
+  galleryModal.innerHTML = "";
 
-// Récupérez la référence de la modale
-const modal = document.getElementById("myModal");
+  // Insère la galerie clonée dans la galerie de la modale
+  galleryModal.appendChild(clonedGallery);
 
-// Ajoutez un événement de clic à la modale pour empêcher la propagation des clics à ses éléments enfants
-modal.addEventListener("click", function (event) {
-  event.stopPropagation();
-});
+  // Affiche la modale et le fond semi-transparent
+  modal.style.display = "block";
+  modalBackground.style.display = "block";
 
-// Ajoutez également un événement de clic à l'arrière-plan pour fermer la modale lorsqu'il est cliqué
-document
-  .getElementById("modalBackground")
-  .addEventListener("click", function (event) {
-    closeModal(); // Ferme la modale
+  // Sélectionnez tous les éléments <figure> dans votre modal
+  const figures = document.querySelectorAll(".gallery-modal figure");
+
+  // Pour chaque figure, créez une div trash-icon et ajoutez-y une icône de poubelle
+  figures.forEach((figure) => {
+    // Vérifie si la figure contient déjà une icône de poubelle
+    if (!figure.querySelector(".trash-icon")) {
+      // Créez une nouvelle div trash-icon
+      const trashIconDiv = document.createElement("div");
+      trashIconDiv.classList.add("trash-icon");
+
+      // Créez une icône de poubelle <i> et ajoutez-lui les classes appropriées
+      const trashIcon = document.createElement("i");
+      trashIcon.classList.add("fa-solid", "fa-trash-can");
+
+      // Ajoutez l'icône de poubelle à la div trash-icon
+      trashIconDiv.appendChild(trashIcon);
+
+      // Ajoutez la div trash-icon à la figure
+      figure.appendChild(trashIconDiv);
+    }
   });
 
-// Ajoute un écouteur d'événements sur l'élément "modifier"
-document
-  .querySelector(".modifier-text")
-  .addEventListener("click", displayModal);
+  // Masque la modale
+  const closeModal = () => {
+    const modal = document.getElementById("myModal");
+    const modalBackground = document.getElementById("modalBackground");
 
-// Ajoute un écouteur d'événements sur l'icône de fermeture de la modale
-document.querySelector(".close").addEventListener("click", closeModal);
+    // Cache la modale et le fond semi-transparent
+    modal.style.display = "none";
+    modalBackground.style.display = "none";
+  };
 
-// Ajoutez un écouteur d'événements sur le fond semi-transparent de la modale pour détecter les clics à l'extérieur de la modale
-window.addEventListener("click", (event) => {
-  const modal = document.getElementById("myModal");
-  if (event.target === modal) {
-    closeModal();
-  }
-});
+  // Récupérez la référence de la modale
+  //const modal = document.getElementById("myModal");
+
+  // Ajoutez un événement de clic à la modale pour empêcher la propagation des clics à ses éléments enfants
+  modal.addEventListener("click", function (event) {
+    event.stopPropagation();
+  });
+
+  // Ajoutez également un événement de clic à l'arrière-plan pour fermer la modale lorsqu'il est cliqué
+  document
+    .getElementById("modalBackground")
+    .addEventListener("click", function (event) {
+      closeModal(); // Ferme la modale
+    });
+
+  // Ajoute un écouteur d'événements sur l'élément "modifier"
+  document
+    .querySelector(".modifier-text")
+    .addEventListener("click", displayModal);
+
+  // Ajoute un écouteur d'événements sur l'icône de fermeture de la modale
+  document.querySelector(".close").addEventListener("click", closeModal);
+
+  // Ajoutez un écouteur d'événements sur le fond semi-transparent de la modale pour détecter les clics à l'extérieur de la modale et fermer la modale
+  window.addEventListener("click", (event) => {
+    const modal = document.getElementById("myModal");
+    if (event.target === modal) {
+      closeModal();
+    }
+  });
+};
