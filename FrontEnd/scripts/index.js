@@ -66,7 +66,7 @@ const showBlackBar = () => {
   // Ajoute les styles CSS
   blackBar.classList.add("black-bar");
   modifierClicContainer.classList.add("modifier-clic");
-  const template = `<div class="edit-mode-container"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i><span>Mode édition</span></div>`;
+  const template = `<div class="edit-mode-container"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i><span>Modifier</span></div>`;
   blackBar.innerHTML = template;
   modifierClicContainer.innerHTML = template;
   modifierClicContainer.addEventListener("click", () => displayModal());
@@ -202,13 +202,23 @@ const isConnected = () => {
   }
 };
 
-// Méthodes du login
+// Méthode du login
 const updateLoginLink = () => {
   const loginLink = document.querySelector("nav ul li:nth-child(3) a");
+  const modifierButton = document.querySelector(".modifier-clic");
+
   if (loginLink) {
-    loginLink.textContent = "logout";
-    loginLink.href = "#"; // Remplacez '#' par l'URL de déconnexion si nécessaire
-    loginLink.addEventListener("click", handleLogout);
+    const token = localStorage.getItem("token");
+    if (token && token.length) {
+      loginLink.textContent = "logout";
+      loginLink.href = "#";
+      loginLink.addEventListener("click", handleLogout);
+      modifierButton.style.display = "block"; // Affiche le bouton "modifier" si connecté
+    } else {
+      loginLink.textContent = "login"; // Change le texte du lien de connexion
+      loginLink.href = "#login";
+      modifierButton.style.display = "none"; // Cache le bouton "modifier" si déconnecté
+    }
   }
 };
 
@@ -266,38 +276,54 @@ const displayModal = () => {
   const trashIcons = document.querySelectorAll(".trash-icon");
 
   // Ajoute un gestionnaire d'événements de clic à chaque icône
-  trashIcons.forEach((trashIcon) => {
+  /*trashIcons.forEach((trashIcon) => {
     trashIcon.addEventListener("click", function () {
       const figure = this.closest("figure");
 
       // Supprime la <figure> de la modale
       figure.remove();
     });
-  });
+  });*/
 
-  // Suppression des éléments <figure> de la modale et donc de la page
+  // Suppression des médias depuis une route vers le Backend
   trashIcons.forEach((trashIcon) => {
-    trashIcon.addEventListener("click", function () {
-      // Récupération de l'élément parent de trash-icon
+    trashIcon.addEventListener("click", async function () {
       const figure = this.closest("figure");
+      const workId = figure.dataset.id; // Récupère l'ID du travail à supprimer
 
-      // Récupére la valeur de data-categories de la <figure>
-      const categoryValue = figure.dataset.id;
+      try {
+        const response = await fetch(
+          `http://localhost:5678/api/works/${workId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${globalToken}`, // Ajoute le token d'authentification si nécessaire
+            },
+          }
+        );
 
-      // Supprime la <figure> de la modale
-      figure.remove();
-
-      // Supprime également l'élément correspondant sur la page principale
-      const mainPageFigures = document.querySelectorAll(
-        `.gallery figure[data-id="${categoryValue}"]`
-      );
-      if (mainPageFigures) {
-        mainPageFigures.forEach((mainPageFigure) => {
-          mainPageFigure.remove();
-        });
+        if (response.ok) {
+          // Supprime l'élément du DOM
+          figure.remove();
+        } else {
+          // Gère les erreurs de suppression
+          console.error(
+            "Erreur lors de la suppression du travail:",
+            response.statusText
+          );
+        }
+      } catch (error) {
+        console.error("Erreur lors de la suppression du travail:", error);
       }
     });
   });
+
+  // Ajoute un écouteur d'événements sur l'élément "modifier"
+  const modifierTextElement = document.querySelector(".modifier-text");
+  if (modifierTextElement) {
+    modifierTextElement.addEventListener("click", displayModal);
+  }
 
   // Masque la modale
   const closeModal = () => {
@@ -308,6 +334,9 @@ const displayModal = () => {
     modal.style.display = "none";
     modalBackground.style.display = "none";
   };
+
+  // Empêche le rechargement de la page
+  event.preventDefault();
 
   // Ajoute un événement de clic à la modale pour empêcher la propagation des clics aux éléments enfants
   modal.addEventListener("click", function (event) {
@@ -321,19 +350,54 @@ const displayModal = () => {
       closeModal(); // Ferme la modale
     });
 
-  // Ajoute un écouteur d'événements sur l'élément "modifier"
-  document
-    .querySelector(".modifier-text")
-    .addEventListener("click", displayModal);
-
   // Ajoute un écouteur d'événements sur l'icône de fermeture de la modale
   document.querySelector(".close").addEventListener("click", closeModal);
-
-  /*// Ajoute un écouteur d'événements sur le fond semi-transparent de la modale pour détecter les clics à l'extérieur de la modale et fermer la modale
-  window.addEventListener("click", (event) => {
-    const modal = document.getElementById("myModal");
-    if (event.target === modal) {
-      closeModal();
-    }
-  });*/
 };
+
+// Ferme la modale
+const closeModal = () => {
+  const modal = document.getElementById("myModal");
+  const modalBackground = document.getElementById("modalBackground");
+
+  // Cache la modale et le fond semi-transparent
+  modal.style.display = "none";
+  modalBackground.style.display = "none";
+};
+
+// **** Changement du contenu de la modale pour ajouter une photo ****
+// Fonction pour changer le contenu de la modale lors du clic sur "Ajouter une photo"
+const changeModalContent = () => {
+  // Ajoute une classe à la galerie pour l'effet de transition
+  const modal = document.querySelector(".modal");
+  modal.classList.add("slide-left");
+
+  // Supprime le contenu de la galerie après la fin de l'animation
+  setTimeout(() => {
+    modal.innerHTML = `
+      <div class="modal-content add-photo-content">
+        <span class="close"></span>
+        <h2>Ajout photo</h2>
+        <div class="add-gallery">
+          <div class="search-photo"></div>
+          <div class="text-photo">
+            <h3>Titre</h3>
+            <input class="title-photo-modal"></input>
+            <h3>Catégorie</h3>
+            <input class="category-photo-modal"></input>
+          </div>
+        </div>
+        <hr class="separator">
+        <div class="submitted">
+          <button class="btn-submit" id="return" type="submit" onclick="return closeModal()">Valider</button>
+        </div>
+      </div>
+    `;
+
+    // Supprime la classe de transition pour afficher le nouveau contenu sans transition initiale
+    modal.classList.remove("slide-left");
+  }, 100);
+};
+
+// Ajoute un gestionnaire d'événements au bouton "Ajouter une photo" pour appeler la fonction changeModalContent
+const addButton = document.getElementById("return");
+addButton.addEventListener("click", changeModalContent);
