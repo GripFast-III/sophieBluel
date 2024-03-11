@@ -259,10 +259,10 @@ const displayModal = () => {
       // Créé une <div class="trash-icon">
       const trashIconDiv = document.createElement("div");
       trashIconDiv.classList.add("trash-icon");
-
       // Créé une icône trashcan et ajoute la classe appropriée
       const trashIcon = document.createElement("i");
       trashIcon.classList.add("fa-solid", "fa-trash-can");
+      trashIcon.dataset.id = figure.dataset.id;
 
       // Ajoute la <i class="fa-solid fa-trash-can"> à la <div class="trash-icon">
       trashIconDiv.appendChild(trashIcon);
@@ -287,10 +287,11 @@ const displayModal = () => {
 
   // Suppression des médias depuis une route vers le Backend
   trashIcons.forEach((trashIcon) => {
-    trashIcon.addEventListener("click", async function () {
-      const figure = this.closest("figure");
-      const workId = figure.dataset.id; // Récupère l'ID du travail à supprimer
-
+    trashIcon.addEventListener("click", async function (e) {
+      const workId = e.target.dataset.id; // Récupère l'ID du travail à supprimer
+      const figures = document.querySelectorAll(`figure[data-id="${workId}"]`)
+      
+      console.log("🚀 ~ figures:", figures)
       try {
         const response = await fetch(
           `http://localhost:5678/api/works/${workId}`,
@@ -304,8 +305,10 @@ const displayModal = () => {
         );
 
         if (response.ok) {
-          // Supprime l'élément du DOM
-          figure.remove();
+          // Supprime les éléments du DOM
+          figures.forEach(figure => {
+            figure.remove()
+          })
         } else {
           // Gère les erreurs de suppression
           console.error(
