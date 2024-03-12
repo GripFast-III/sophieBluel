@@ -1,6 +1,20 @@
 let allWorks = [];
 let globalToken = null;
 
+// Méthode check connexion
+const isConnected = () => {
+  const token = localStorage.getItem("token");
+  if (token && token.length) {
+    const objectToken = JSON.parse(token);
+    console.log("🚀 ~ isConnected ~ objectToken:", objectToken);
+    globalToken = objectToken.token;
+
+    return true;
+  } else {
+    return false;
+  }
+};
+
 const init = async () => {
   let finalResponseCat = await fetchCategories();
   let finalResponseWorks = await fetchWorks();
@@ -15,6 +29,7 @@ const init = async () => {
   displayWorks(finalResponseWorks);
   allWorks = finalResponseWorks;
   let iAmConnected = isConnected();
+  console.log("🚀 ~ init ~ iAmConnected:", iAmConnected);
   if (iAmConnected) {
     // Appelle la fonction pour ajouter l'icône à côté du titre "Mes Projets"
     showBlackBar();
@@ -188,20 +203,6 @@ buttons.forEach((button) => {
   });
 });
 
-// Méthode check connexion
-const isConnected = () => {
-  const token = localStorage.getItem("token");
-  if (token && token.length) {
-    const objectToken = JSON.parse(token);
-    console.log("🚀 ~ isConnected ~ objectToken:", objectToken);
-    globalToken = objectToken.token;
-
-    return true;
-  } else {
-    return false;
-  }
-};
-
 // Méthode du login
 const updateLoginLink = () => {
   const loginLink = document.querySelector("nav ul li:nth-child(3) a");
@@ -368,6 +369,7 @@ const closeModal = () => {
 };
 
 // **** Changement du contenu de la modale pour ajouter une photo ****
+
 // Fonction pour changer le contenu de la modale lors du clic sur "Ajouter une photo"
 const changeModalContent = () => {
   // Ajoute une classe à la galerie pour l'effet de transition
