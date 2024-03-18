@@ -268,7 +268,7 @@ margin: auto;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
-input[type="submit"]{
+#contact input[type="submit"]{
 	font-family: 'Syne';
 	font-weight: 700;
 	color: white;
@@ -277,6 +277,7 @@ input[type="submit"]{
 	width: 180px;
 	text-align: center;
 	border-radius: 60px ;
+	cursor: pointer;
 }
 
 footer {
@@ -382,7 +383,7 @@ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 .close {
 position: absolute;
 top: 30px;
-right: 10px;
+right: 30px;
 cursor: pointer;
 font-size: 24px;
 }
@@ -488,10 +489,18 @@ font-size: 24px;
 	z-index: 9999;
 }
 
+.fa-arrow-left {
+	position: absolute;
+	top: 30px;
+	left: 30px;
+	cursor: pointer;
+	font-size: 20px;
+}
 
 .middle-part {
 	width: 100%;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 }
 
@@ -499,7 +508,12 @@ font-size: 24px;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	width: 55%;
+	width: 100%;
+}
+
+.text-and-category h3 {
+	margin-bottom: 5%;
+	width: 80%;
 }
 
 .search-photo {
@@ -507,31 +521,48 @@ font-size: 24px;
 	justify-content: center;
 	width: 100%;
 	height: 169px;
+	margin-bottom: 25px;
 }
 
-.search-photo:hover {
+.search-photo:hover {
 	cursor: pointer;
 }
 
+.search-photo img {
+	width: 65%;
+	border-radius: 3px;
+}
+
 #fileInput {
+	position: absolute;
 	opacity: 0;
-	width: 100%;
+	width: 61%;
+	background-color: #e3edf4;
+	height: 25%;
 } 
+
+.text-photo,
+.text-category {
+	display: flex;
+	justify-content: center;
+}
+
+.title-photo-modal input {
+	box-sizing: border-box;
+	border: 1px solid transparent;
+	box-shadow:  2px 2px 14px -4px;
+	height: 51px;
+}
 
 .title-photo-modal,
 .category-photo-modal {
 	display: flex;
   	flex-direction: column;
   	justify-content: center;
-	/*width: 100%;*/
+	align-items: center;
+	width: 80%;
 	border: none;
 	margin-bottom: 5%;
-}
-
-.title-photo-modal input {
-	box-shadow:  2px 2px 14px -4px;
-	height: 51px;
-
 }
 
 .category-photo-modal select {

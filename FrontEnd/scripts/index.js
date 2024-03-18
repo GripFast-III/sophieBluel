@@ -381,31 +381,43 @@ const changeModalContent = () => {
     modal.innerHTML = `
       <div class="modal-content add-photo-content">
         <div class="upper-part">
-          <div class="return-arrow"></div>
+          <div class="return-arrow"><i class="fa fa-arrow-left" aria-hidden="true"></i>
+          </div>
           <h2>Ajout photo</h2>
           <span class="close">&times;</span>
         </div>
         <div class="middle-part">
+
           <div class="add-gallery">
-            <div class="search-photo"><input type="file" id="fileInput" accept="image/*">
-          </div>
-          <div class="text-photo">
-            <div class="title-photo-modal">
-              <h3>Titre</h3>
-              <input class="title-photo-modal"></input>
+            <div class="search-photo">
+              <input type="file" id="fileInput" accept="image/*">
+              <img src="./assets/icons/Capture d’écran 2024-03-18 à 08.01.08.png" >
             </div>
           </div>
-          <div class="category-photo-modal">
-            <h3>Catégorie</h3>
-            <select class="category-photo-modal">
-              <option value="1"></option>
-              <option value="2">Objet</option>
-              <option value="3">Appartements</option>
-              <option value="4">Hotel & restaurants</option>
-            </select>
+          
+          <div class="text-and-category">
+            <div class="text-photo">
+              <div class="title-photo-modal">
+                <h3>Titre</h3>
+                <input class="title-photo-modal"></input>
+              </div>
+            </div>
+
+            <div class="text-category">
+              <div class="category-photo-modal">
+                <h3>Catégorie</h3>
+                <select class="category-photo-modal">
+                  <option value="1"></option>
+                  <option value="2">Objet</option>
+                  <option value="3">Appartements</option>
+                  <option value="4">Hotel & restaurants</option>
+                </select>
+              </div>
+            </div>
           </div>
+        
         </div>
-        </div>
+
         <div class="lower-part">
           <hr class="separator">
           <div class="submitted">
@@ -423,6 +435,25 @@ const changeModalContent = () => {
 // Ajoute un gestionnaire d'événements au bouton "Ajouter une photo" pour appeler la fonction changeModalContent
 const addButton = document.getElementById("return");
 addButton.addEventListener("click", changeModalContent);
+
+// Gestion de la flèche de retour dans la modale
+// Sélection de l'icône de retour
+const returnArrow =
+  document.querySelector(".fa-arrow-left"); /************ NE FONCTIONNE PAS */
+console.log("🚀 ~ returnArrow:", returnArrow);
+
+// Ajout d'un gestionnaire d'événements pour le clic sur l'icône de retour
+returnArrow.addEventListener("click", function () {
+  console.log("🚀 ~ returnArrow:", returnArrow);
+  // Sélection de l'élément modal
+  const modalContent = document.querySelector(
+    ".modal-content add-photo-content"
+  );
+
+  // Suppression de la classe "add-photo-content" de l'élément modal
+  modalContent.classList.remove("add-photo-content");
+});
+console.log("🚀 ~ modalContent:", modalContent);
 
 /* *** Gestion de l'ajout d'une photo *** */
 
