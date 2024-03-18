@@ -290,9 +290,9 @@ const displayModal = () => {
   trashIcons.forEach((trashIcon) => {
     trashIcon.addEventListener("click", async function (e) {
       const workId = e.target.dataset.id; // Récupère l'ID du travail à supprimer
-      const figures = document.querySelectorAll(`figure[data-id="${workId}"]`)
-      
-      console.log("🚀 ~ figures:", figures)
+      const figures = document.querySelectorAll(`figure[data-id="${workId}"]`);
+
+      console.log("🚀 ~ figures:", figures);
       try {
         const response = await fetch(
           `http://localhost:5678/api/works/${workId}`,
@@ -307,9 +307,9 @@ const displayModal = () => {
 
         if (response.ok) {
           // Supprime les éléments du DOM
-          figures.forEach(figure => {
-            figure.remove()
-          })
+          figures.forEach((figure) => {
+            figure.remove();
+          });
         } else {
           // Gère les erreurs de suppression
           console.error(
@@ -368,7 +368,7 @@ const closeModal = () => {
   modalBackground.style.display = "none";
 };
 
-// **** Changement du contenu de la modale pour ajouter une photo ****
+// **** Changement du contenu de la modale pour pouvoir ajouter une photo ****
 
 // Fonction pour changer le contenu de la modale lors du clic sur "Ajouter une photo"
 const changeModalContent = () => {
@@ -380,20 +380,37 @@ const changeModalContent = () => {
   setTimeout(() => {
     modal.innerHTML = `
       <div class="modal-content add-photo-content">
-        <span class="close"></span>
-        <h2>Ajout photo</h2>
-        <div class="add-gallery">
-          <div class="search-photo"></div>
+        <div class="upper-part">
+          <div class="return-arrow"></div>
+          <h2>Ajout photo</h2>
+          <span class="close">&times;</span>
+        </div>
+        <div class="middle-part">
+          <div class="add-gallery">
+            <div class="search-photo"><input type="file" id="fileInput" accept="image/*">
+          </div>
           <div class="text-photo">
-            <h3>Titre</h3>
-            <input class="title-photo-modal"></input>
+            <div class="title-photo-modal">
+              <h3>Titre</h3>
+              <input class="title-photo-modal"></input>
+            </div>
+          </div>
+          <div class="category-photo-modal">
             <h3>Catégorie</h3>
-            <input class="category-photo-modal"></input>
+            <select class="category-photo-modal">
+              <option value="1"></option>
+              <option value="2">Objet</option>
+              <option value="3">Appartements</option>
+              <option value="4">Hotel & restaurants</option>
+            </select>
           </div>
         </div>
-        <hr class="separator">
-        <div class="submitted">
-          <button class="btn-submit" id="return" type="submit" onclick="return closeModal()">Valider</button>
+        </div>
+        <div class="lower-part">
+          <hr class="separator">
+          <div class="submitted">
+            <button class="btn-submit" id="return" type="submit" onclick="return closeModal()">Valider</button>
+          </div>
         </div>
       </div>
     `;
@@ -406,3 +423,56 @@ const changeModalContent = () => {
 // Ajoute un gestionnaire d'événements au bouton "Ajouter une photo" pour appeler la fonction changeModalContent
 const addButton = document.getElementById("return");
 addButton.addEventListener("click", changeModalContent);
+
+/* *** Gestion de l'ajout d'une photo *** */
+
+// Fonction qui gère le clic sur la zone de recherche de photo
+const handleSearchPhotoClick = () => {
+  document.getElementById("fileInput").click();
+};
+
+// Gestionnaire de changement de fichier sélectionné
+document.getElementById("fileInput").addEventListener("change", (event) => {
+  const file = event.target.files[0];
+  // Avec ça, on peut utiliser le fichier sélectionné par l'utilisateur pour l'afficher ou l'envoyer au serveur
+});
+
+// Permet d'ajouter une catégorie au média
+const categoryElement = document.querySelector(".category-photo-modal");
+const category = categoryElement.value;
+
+// Gestionnaire de clic sur le bouton "Valider"
+document.querySelector(".btn-submit").addEventListener("click", async () => {
+  // Récupère les valeurs saisies par l'utilisateur
+  const title = document.querySelector(".title-photo-modal").value;
+  const category = document.querySelector(".category-photo-modal").value; // Vous devez implémenter la logique pour récupérer la catégorie sélectionnée
+
+  // Envoie des données au backend
+  try {
+    const response = await fetch("http://localhost:5678/api/works", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${globalToken}`,
+      },
+      body: JSON.stringify({
+        title: title,
+        category: category,
+      }),
+    });
+
+    if (response.ok) {
+      // Réinitialise les champs du formulaire après avoir soumis avec succès les données
+      document.querySelector(".title-photo-modal").value = "";
+      document.querySelector(".category-photo-modal").value = "";
+      // Réinitialise la sélection de l'image si nécessaire
+
+      // Fermer la modale
+      closeModal();
+    } else {
+      console.error("Erreur lors de la soumission des données.");
+    }
+  } catch (error) {
+    console.error("Erreur lors de la soumission des données :", error);
+  }
+});
