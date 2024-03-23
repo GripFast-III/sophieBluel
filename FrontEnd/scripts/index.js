@@ -19,6 +19,10 @@ const init = async () => {
   let finalResponseCat = await fetchCategories();
   let finalResponseWorks = await fetchWorks();
 
+  // Ajoute la classe "hide" à la div container-form
+  const containerForm = document.querySelector(".container-form");
+  containerForm.classList.add("hide");
+
   finalResponseCat.unshift({
     id: 0,
     name: "Tous",
@@ -250,6 +254,13 @@ const displayModal = () => {
   modal.style.display = "block";
   modalBackground.style.display = "block";
 
+  // Supprime la classe "hide" de la div container-form
+  const containerForm = document.querySelector(".container-form");
+  containerForm.classList.remove("hide");
+
+  // Retire également la classe "show" de la div container-form
+  containerForm.classList.remove("show");
+
   // Sélectionne tous les éléments <figure> dans la modal
   const figures = document.querySelectorAll(".gallery-modal figure");
 
@@ -334,6 +345,10 @@ const displayModal = () => {
     const modal = document.getElementById("myModal");
     const modalBackground = document.getElementById("modalBackground");
 
+    // Ajoute la classe "hide" à la div container-form
+    const containerForm = document.querySelector(".container-form");
+    containerForm.classList.add("hide");
+
     // Cache la modale et le fond semi-transparent
     modal.style.display = "none";
     modalBackground.style.display = "none";
@@ -358,10 +373,26 @@ const displayModal = () => {
   document.querySelector(".close").addEventListener("click", closeModal);
 };
 
+// Ajoute un gestionnaire d'événements à l'arrière-plan qui fait appel à closeModal()
+// et qui donc réinitialise le visuel lorsque l'on ouvre à nouveau la modale
+document
+  .getElementById("modalBackground")
+  .addEventListener("click", function (event) {
+    closeModal();
+  });
+
 // Ferme la modale
 const closeModal = () => {
   const modal = document.getElementById("myModal");
   const modalBackground = document.getElementById("modalBackground");
+
+  // Supprime la classe "hide" de la div container-form
+  const containerForm = document.querySelector(".container-form");
+  containerForm.classList.remove("hide");
+
+  // Supprime également la classe "hide" de la div modal-content
+  const modalContent = document.querySelector(".modal-content");
+  modalContent.classList.remove("hide");
 
   // Cache la modale et le fond semi-transparent
   modal.style.display = "none";
