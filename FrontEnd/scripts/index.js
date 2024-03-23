@@ -381,6 +381,23 @@ document
     closeModal();
   });
 
+// Gestion de la flèche de retour dans la modale
+// Sélection de l'icône de retour
+const returnArrow = document.querySelector(".fa-arrow-left");
+
+// Ajout d'un gestionnaire d'événements pour le clic sur l'icône de retour
+returnArrow.addEventListener("click", function () {
+  // Supprime la classe "show" de la div "container-form" et ajoute la classe "hide"
+  const containerForm = document.querySelector(".container-form");
+  containerForm.classList.remove("show");
+  //containerForm.classList.add("hide");
+
+  // Supprime la classe "hide" de la div "modal-content" et ajoute la classe "show"
+  const modalContent = document.querySelector(".modal-content");
+  modalContent.classList.remove("hide");
+  //modalContent.classList.add("show");
+});
+
 // Ferme la modale
 const closeModal = () => {
   const modal = document.getElementById("myModal");
