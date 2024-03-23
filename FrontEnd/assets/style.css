@@ -419,6 +419,15 @@ font-size: 24px;
 	background-color: #1D6154;
 }
 
+#add-pictures {
+	width: 35%;
+	background-color: rgb(255, 255, 255);
+}
+
+#add-pictures:hover {
+	background-color: #1D6154;
+}
+
 .modal-content h2 {
 	margin-bottom: 30px;
 	margin-top: 30px;
@@ -573,4 +582,17 @@ font-size: 24px;
 
 .add-gallery h3 {
 	margin-bottom: 15px;
+}
+
+
+.container-form {
+	display: none;
+}
+
+.hide {
+	display: none;
+}
+
+.show {
+	display: block;
 }

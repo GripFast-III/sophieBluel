@@ -373,87 +373,29 @@ const closeModal = () => {
 // Fonction pour changer le contenu de la modale lors du clic sur "Ajouter une photo"
 const changeModalContent = () => {
   // Ajoute une classe à la galerie pour l'effet de transition
-  const modal = document.querySelector(".modal");
-  modal.classList.add("slide-left");
+  const contentModal = document.querySelector(".modal-content");
+  const form = document.querySelector(".container-form");
+  contentModal.classList.add("hide"); // add/remove
+  form.classList.add("show");
 
-  // Supprime le contenu de la galerie après la fin de l'animation
-  setTimeout(() => {
-    modal.innerHTML = `
-      <div class="modal-content add-photo-content">
-        <div class="upper-part">
-          <div class="return-arrow"><i class="fa fa-arrow-left" aria-hidden="true"></i>
-          </div>
-          <h2>Ajout photo</h2>
-          <span class="close">&times;</span>
-        </div>
-        <div class="middle-part">
+  /*contentModal.classList.add("show"); // ????????????????????????????????
+  form.classList.add("hide");*/
 
-          <div class="add-gallery">
-            <div class="search-photo">
-              <input type="file" id="fileInput" accept="image/*">
-              <img src="./assets/icons/Capture d’écran 2024-03-18 à 08.01.08.png" >
-            </div>
-          </div>
-          
-          <div class="text-and-category">
-            <div class="text-photo">
-              <div class="title-photo-modal">
-                <h3>Titre</h3>
-                <input class="title-photo-modal"></input>
-              </div>
-            </div>
+  // Gestion de la flèche de retour dans la modale
+  // Sélection de l'icône de retour
+  const returnArrow = document.querySelector(".fa-arrow-left");
+  console.log("🚀 ~ returnArrow:", returnArrow);
 
-            <div class="text-category">
-              <div class="category-photo-modal">
-                <h3>Catégorie</h3>
-                <select class="category-photo-modal">
-                  <option value="1"></option>
-                  <option value="2">Objet</option>
-                  <option value="3">Appartements</option>
-                  <option value="4">Hotel & restaurants</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        
-        </div>
-
-        <div class="lower-part">
-          <hr class="separator">
-          <div class="submitted">
-            <button class="btn-submit" id="return" type="submit" onclick="return closeModal()">Valider</button>
-          </div>
-        </div>
-      </div>
-    `;
-
-    // Supprime la classe de transition pour afficher le nouveau contenu sans transition initiale
-    modal.classList.remove("slide-left");
-  }, 100);
+  // Ajout d'un gestionnaire d'événements pour le clic sur l'icône de retour
+  returnArrow.addEventListener("click", function () {
+    console.log("🚀 ~ returnArrow:", returnArrow);
+  });
 };
 
 // Ajoute un gestionnaire d'événements au bouton "Ajouter une photo" pour appeler la fonction changeModalContent
-const addButton = document.getElementById("return");
-addButton.addEventListener("click", changeModalContent);
-
-// Gestion de la flèche de retour dans la modale
-// Sélection de l'icône de retour
-const returnArrow =
-  document.querySelector(".fa-arrow-left"); /************ NE FONCTIONNE PAS */
-console.log("🚀 ~ returnArrow:", returnArrow);
-
-// Ajout d'un gestionnaire d'événements pour le clic sur l'icône de retour
-returnArrow.addEventListener("click", function () {
-  console.log("🚀 ~ returnArrow:", returnArrow);
-  // Sélection de l'élément modal
-  const modalContent = document.querySelector(
-    ".modal-content add-photo-content"
-  );
-
-  // Suppression de la classe "add-photo-content" de l'élément modal
-  modalContent.classList.remove("add-photo-content");
-});
-console.log("🚀 ~ modalContent:", modalContent);
+const addButton = document.getElementById("add-pictures");
+addButton.addEventListener("click", () => changeModalContent());
+console.log("🚀 ~ addButton:", addButton);
 
 /* *** Gestion de l'ajout d'une photo *** */
 
