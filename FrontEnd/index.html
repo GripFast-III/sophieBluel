@@ -56,7 +56,7 @@
       </div>
       <div class="buttons"></div>
 
-      <!-- Modale -->
+      <!-- Modales -->
       <div id="myModal" class="modal">
         <!-- Modale "originale" -->
         <div class="modal-content">
@@ -87,8 +87,10 @@
 
             <div class="add-gallery">
               <div class="search-photo">
-                <input type="file" id="fileInput" accept="image/*">
-                <img src="./assets/icons/Capture d’écran 2024-03-18 à 08.01.08.png">
+                <label> 
+                  <img id="initialImg"  src="./assets/icons/Capture d’écran 2024-03-18 à 08.01.08.png" />
+                   <input type="file" id="fileInput" accept="image/*" capture>
+               </label> 
               </div>
             </div>
 
@@ -96,14 +98,14 @@
               <div class="text-photo">
                 <div class="title-photo-modal">
                   <h3>Titre</h3>
-                  <input class="title-photo-modal"></input>
+                  <input class="title-photo"></input>
                 </div>
               </div>
 
               <div class="text-category">
                 <div class="category-photo-modal">
                   <h3>Catégorie</h3>
-                  <select class="category-photo-modal">
+                  <select class="category-photo">
                     <option value="1"></option>
                     <option value="2">Objet</option>
                     <option value="3">Appartements</option>
@@ -122,70 +124,8 @@
           </div>
         </div>
       </div>
-        <!--<div class="modal-content">
-          <span class="close">&times;</span>
-          <div class="container-content">
-            <h2>Galerie photo</h2>
-            <div class="gallery-modal"></div>
-          </div>
-
-          <div class="container-form">
-            <div class="modal-content add-photo-content">
-              <div class="upper-part">
-                <div class="return-arrow"><i class="fa fa-arrow-left" aria-hidden="true"></i>
-                </div>
-                <h2>Ajout photo</h2>
-                <span class="close">&times;</span>
-              </div>
-
-              <div class="middle-part">
-
-                <div class="add-gallery">
-                  <div class="search-photo">
-                    <input type="file" id="fileInput" accept="image/*">
-                    <img src="./assets/icons/Capture d’écran 2024-03-18 à 08.01.08.png">
-                  </div>
-                </div>
-
-                <div class="text-and-category">
-                  <div class="text-photo">
-                    <div class="title-photo-modal">
-                      <h3>Titre</h3>
-                      <input class="title-photo-modal"></input>
-                    </div>
-                  </div>
-
-                  <div class="text-category">
-                    <div class="category-photo-modal">
-                      <h3>Catégorie</h3>
-                      <select class="category-photo-modal">
-                        <option value="1"></option>
-                        <option value="2">Objet</option>
-                        <option value="3">Appartements</option>
-                        <option value="4">Hotel & restaurants</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="lower-part">
-                <hr class="separator">
-                <div class="submitted">
-                  <button class="btn-submit" id="return" type="submit">Valider</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <hr class="separator" />
-          <div class="submitted">
-            <button class="btn-submit" class="btn-close" id="add-pictures" type="submit">
-              Ajouter une photo
-            </button>
-          </div>
-        </div>-->
-      </div>
+    </div>
+      
       <div id="modalBackground" class="modal-background"></div>
 
       <div class="gallery"></div>

@@ -287,16 +287,6 @@ const displayModal = () => {
   // Sélectionne toutes les icônes de trash-icon dans la modal
   const trashIcons = document.querySelectorAll(".trash-icon");
 
-  // Ajoute un gestionnaire d'événements de clic à chaque icône
-  /*trashIcons.forEach((trashIcon) => {
-    trashIcon.addEventListener("click", function () {
-      const figure = this.closest("figure");
-
-      // Supprime la <figure> de la modale
-      figure.remove();
-    });
-  });*/
-
   // Suppression des médias depuis une route vers le Backend
   trashIcons.forEach((trashIcon) => {
     trashIcon.addEventListener("click", async function (e) {
@@ -345,6 +335,11 @@ const displayModal = () => {
     const modal = document.getElementById("myModal");
     const modalBackground = document.getElementById("modalBackground");
 
+    // Réinitialiser les champs du formulaire
+    document.querySelector(".title-photo-modal").value = "";
+    document.querySelector(".category-photo-modal").value = "";
+    document.getElementById("fileInput").value = "";
+
     // Ajoute la classe "hide" à la div container-form
     const containerForm = document.querySelector(".container-form");
     containerForm.classList.add("hide");
@@ -370,7 +365,9 @@ const displayModal = () => {
     });
 
   // Ajoute un écouteur d'événements sur l'icône de fermeture de la modale
-  document.querySelector(".close").addEventListener("click", closeModal);
+  document
+    .querySelector(".close")
+    .addEventListener("click", closeModalAndReset);
 };
 
 // Ajoute un gestionnaire d'événements à l'arrière-plan qui fait appel à closeModal()
@@ -381,7 +378,7 @@ document
     closeModal();
   });
 
-// Gestion de la flèche de retour dans la modale
+// **** Gestion de la flèche de retour dans la modale ****
 // Sélection de l'icône de retour
 const returnArrow = document.querySelector(".fa-arrow-left");
 
@@ -398,10 +395,15 @@ returnArrow.addEventListener("click", function () {
   //modalContent.classList.add("show");
 });
 
-// Ferme la modale
+// Fermeture de la modale
 const closeModal = () => {
   const modal = document.getElementById("myModal");
   const modalBackground = document.getElementById("modalBackground");
+
+  // Réinitialiser les champs du formulaire
+  document.querySelector(".title-photo-modal").value = "";
+  document.querySelector(".category-photo-modal").value = "";
+  document.getElementById("fileInput").value = "";
 
   // Supprime la classe "hide" de la div container-form
   const containerForm = document.querySelector(".container-form");
@@ -463,10 +465,47 @@ const categoryElement = document.querySelector(".category-photo-modal");
 const category = categoryElement.value;
 
 // Gestionnaire de clic sur le bouton "Valider"
-document.querySelector(".btn-submit").addEventListener("click", async () => {
-  // Récupère les valeurs saisies par l'utilisateur
-  const title = document.querySelector(".title-photo-modal").value;
-  const category = document.querySelector(".category-photo-modal").value; // Vous devez implémenter la logique pour récupérer la catégorie sélectionnée
+document.getElementById("return").addEventListener("click", async () => {
+  // Récupère le titre saisi par l'utilisateur
+  const titleElement = document.querySelector(".title-photo");
+  const title = titleElement ? titleElement.value.trim() : "";
+
+  // Vérifie si un titre est renseigné
+  if (!title) {
+    alert("Veuillez renseigner le titre.");
+    return;
+  }
+
+  // Récupère la catégorie sélectionnée par l'utilisateur
+  const categoryElement = document.querySelector(".category-photo");
+  const category = categoryElement ? categoryElement.value : "";
+
+  // Vérifie la sélection d'une catégorie
+  if (!category) {
+    alert("Veuillez sélectionner une catégorie.");
+    return;
+  }
+
+  // Vérifie la sélection d'un fichier
+  const fileInput = document.getElementById("fileInput");
+  if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+    alert("Veuillez sélectionner un fichier.");
+    return;
+  }
+
+  // Vérifier si le fichier est une image
+  const file = fileInput.files[0];
+  if (!file.type.startsWith("image/")) {
+    alert("Veuillez sélectionner une image.");
+    return;
+  }
+
+  // Vérifier le poids du fichier
+  const maxFileSizeInBytes = 4 * 1024 * 1024; // 4 Mo
+  if (file.size > maxFileSizeInBytes) {
+    alert("La taille du fichier dépasse la limite autorisée de 4 Mo.");
+    return;
+  }
 
   // Envoie des données au backend
   try {
@@ -484,9 +523,8 @@ document.querySelector(".btn-submit").addEventListener("click", async () => {
 
     if (response.ok) {
       // Réinitialise les champs du formulaire après avoir soumis avec succès les données
-      document.querySelector(".title-photo-modal").value = "";
-      document.querySelector(".category-photo-modal").value = "";
-      // Réinitialise la sélection de l'image si nécessaire
+      titleElement.value = "";
+      categoryElement.value = "";
 
       // Fermer la modale
       closeModal();
@@ -497,3 +535,26 @@ document.querySelector(".btn-submit").addEventListener("click", async () => {
     console.error("Erreur lors de la soumission des données :", error);
   }
 });
+
+// Fonction pour réinitialiser les champs titre et catégorie de la modale
+function resetModalFields() {
+  const titleElement = document.querySelector(".title-photo");
+  const categoryElement = document.querySelector(".category-photo");
+
+  if (titleElement) {
+    titleElement.value = "";
+  }
+
+  if (categoryElement) {
+    categoryElement.value = "";
+  }
+}
+
+// Fonction pour fermer la modale et réinitialiser les champs
+function closeModalAndReset() {
+  closeModal(); // Ferme la modale
+  resetModalFields(); // Réinitialise les champs de la modale
+}
+
+// Gestionnaire de clic sur la croix "close" de la modale
+document.querySelector(".close").addEventListener("click", closeModalAndReset);
