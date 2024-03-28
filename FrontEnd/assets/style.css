@@ -428,6 +428,12 @@ font-size: 24px;
 	background-color: #1D6154;
 }
 
+.disabled {
+	background-color: rgb(167, 167, 167);
+	color: white;
+	border: none;
+}
+
 .modal-content h2 {
 	margin-bottom: 30px;
 	margin-top: 30px;
@@ -537,19 +543,18 @@ font-size: 24px;
 	cursor: pointer;
 }
 
-.search-photo img {
-	width: 65%;
-	border-radius: 3px;
-}
-
 .search-photo label {
 	display: flex;
 	align-items: center;
 	flex-direction: column;
+	width: 65%;
+	background-color: rgba(232, 241, 246, 1);
+	align-self: center;
 }
 
 #initialImg {
 	cursor: pointer;
+	width: 40%;
 }
 
 .search-photo input[type="file"] {
@@ -616,4 +621,8 @@ font-size: 24px;
 
 .show {
 	display: block;
+}
+
+.canvas-none {
+	display: none;
 }

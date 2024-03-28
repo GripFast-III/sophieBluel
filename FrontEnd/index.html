@@ -88,9 +88,13 @@
             <div class="add-gallery">
               <div class="search-photo">
                 <label> 
-                  <img id="initialImg"  src="./assets/icons/Capture d’écran 2024-03-18 à 08.01.08.png" />
+                  <img id="initialImg"  src="./assets/icons/add-photo.png" />
                    <input type="file" id="fileInput" accept="image/*" capture>
-               </label> 
+               </label>
+               <span class="errorFile"></span>
+              </div>
+              <div class="canvas-none">
+                <canvas id="canvasTarget"></canvas>
               </div>
             </div>
 
@@ -119,7 +123,7 @@
           <div class="lower-part">
             <hr class="separator">
             <div class="submitted">
-              <button class="btn-submit" id="return" type="submit">Valider</button>
+              <button class="btn-submit" id="return" disabled type="submit">Valider</button>
             </div>
           </div>
         </div>

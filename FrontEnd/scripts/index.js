@@ -1,6 +1,12 @@
 let allWorks = [];
 let globalToken = null;
 
+let errors = {
+  fileInput: false,
+  title: false,
+  category: false,
+};
+
 // Méthode check connexion
 const isConnected = () => {
   const token = localStorage.getItem("token");
@@ -401,8 +407,8 @@ const closeModal = () => {
   const modalBackground = document.getElementById("modalBackground");
 
   // Réinitialiser les champs du formulaire
-  document.querySelector(".title-photo-modal").value = "";
-  document.querySelector(".category-photo-modal").value = "";
+  document.querySelector(".title-photo").value = "";
+  document.querySelector(".category-photo").value = "";
   document.getElementById("fileInput").value = "";
 
   // Supprime la classe "hide" de la div container-form
@@ -428,9 +434,6 @@ const changeModalContent = () => {
   contentModal.classList.add("hide"); // add/remove
   form.classList.add("show");
 
-  /*contentModal.classList.add("show"); // ????????????????????????????????
-  form.classList.add("hide");*/
-
   // Gestion de la flèche de retour dans la modale
   // Sélection de l'icône de retour
   const returnArrow = document.querySelector(".fa-arrow-left");
@@ -447,7 +450,7 @@ const addButton = document.getElementById("add-pictures");
 addButton.addEventListener("click", () => changeModalContent());
 console.log("🚀 ~ addButton:", addButton);
 
-/* *** Gestion de l'ajout d'une photo *** */
+/* **** Gestion de l'ajout d'une photo **** */
 
 // Fonction qui gère le clic sur la zone de recherche de photo
 const handleSearchPhotoClick = () => {
@@ -457,8 +460,35 @@ const handleSearchPhotoClick = () => {
 // Gestionnaire de changement de fichier sélectionné
 document.getElementById("fileInput").addEventListener("change", (event) => {
   const file = event.target.files[0];
-  // Avec ça, on peut utiliser le fichier sélectionné par l'utilisateur pour l'afficher ou l'envoyer au serveur
+  console.log("🚀 ~ document.getElementById ~ file:", file);
+  const limitMax = 4000000;
+  const limitOk = file.size < limitMax;
+  console.log("🚀 ~ document.getElementById ~ limitOk:", limitOk);
+  const types = ["image/jpeg", "image/png"];
+  console.log("🚀 ~ document.getElementById ~ types:", types);
+  const extentionOk = types.includes(file.type);
+  console.log("🚀 ~ document.getElementById ~ extentionOk:", extentionOk);
+  const errorHtml = document.querySelector(".errorFile");
+  if (!limitOk || !extentionOk) {
+    console.log("ko");
+    errors.fileInput = true;
+    errorHtml.innerHTML =
+      "La taille ou le format de votre image est incorrect.";
+  } else {
+    errorHtml.innerHTML = "";
+    console.log("ok");
+    errors.fileInput = false;
+  }
+  checkForm();
 });
+
+const checkForm = () => {
+  if (!errors.fileInput && !errors.title && !errors.category) {
+    // si tout est OK, mettre disable a "false"
+  } else {
+    // mettre le disable a "true"
+  }
+};
 
 // Permet d'ajouter une catégorie au média
 const categoryElement = document.querySelector(".category-photo-modal");
@@ -472,7 +502,7 @@ document.getElementById("return").addEventListener("click", async () => {
 
   // Vérifie si un titre est renseigné
   if (!title) {
-    alert("Veuillez renseigner le titre.");
+    alert("Veuillez renseigner le titre."); // Remplacer
     return;
   }
 
@@ -482,32 +512,32 @@ document.getElementById("return").addEventListener("click", async () => {
 
   // Vérifie la sélection d'une catégorie
   if (!category) {
-    alert("Veuillez sélectionner une catégorie.");
+    alert("Veuillez sélectionner une catégorie."); // Remplacer
     return;
   }
 
   // Vérifie la sélection d'un fichier
   const fileInput = document.getElementById("fileInput");
   if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
-    alert("Veuillez sélectionner un fichier.");
+    alert("Veuillez sélectionner un fichier."); // Remplacer
     return;
   }
 
   // Vérifier si le fichier est une image
   const file = fileInput.files[0];
   if (!file.type.startsWith("image/")) {
-    alert("Veuillez sélectionner une image.");
+    alert("Veuillez sélectionner une image."); // Remplacer
     return;
   }
 
   // Vérifier le poids du fichier
   const maxFileSizeInBytes = 4 * 1024 * 1024; // 4 Mo
   if (file.size > maxFileSizeInBytes) {
-    alert("La taille du fichier dépasse la limite autorisée de 4 Mo.");
+    alert("La taille du fichier dépasse la limite autorisée de 4 Mo."); // Remplacer
     return;
   }
 
-  // Envoie des données au backend
+  // Envoie des données au backend --------------> utiliser la methode formData <--------------
   try {
     const response = await fetch("http://localhost:5678/api/works", {
       method: "POST",
@@ -558,3 +588,40 @@ function closeModalAndReset() {
 
 // Gestionnaire de clic sur la croix "close" de la modale
 document.querySelector(".close").addEventListener("click", closeModalAndReset);
+
+/* **** Ajout de l'image téléchargée en mini dans la modal **** */
+
+const input = document.querySelector("input[type=file]");
+
+input.onchange = function () {
+  let file = input.files[0];
+  drawOnCanvas(file);
+};
+
+function drawOnCanvas(file) {
+  let reader = new FileReader();
+  reader.onload = function (e, url) {
+    let dataURL = e.target.result,
+      c = document.querySelector("#canvasTarget"),
+      ctx = c.getContext("2d"),
+      img = new Image();
+
+    img.onload = function () {
+      c.width = img.width;
+      c.height = img.height;
+      ctx.drawImage(img, 0, 0);
+      if (img.width > 200) {
+        c.style.maxWidth = "200px";
+      }
+    };
+
+    img.src = dataURL;
+    console.log("dataURL", dataURL);
+    const initialImg = document.getElementById("initialImg");
+    console.log("initialImg", initialImg);
+
+    initialImg.src = dataURL;
+  };
+
+  reader.readAsDataURL(file);
+}
