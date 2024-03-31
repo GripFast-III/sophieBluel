@@ -406,7 +406,11 @@ const closeModal = () => {
   const modal = document.getElementById("myModal");
   const modalBackground = document.getElementById("modalBackground");
 
-  // Réinitialiser les champs du formulaire
+  // Réinitialise l'image de la modal
+  const initialImg = document.getElementById("initialImg");
+  initialImg.src = "./assets/icons/add-photo.png";
+
+  // Réinitialise les champs du formulaire
   document.querySelector(".title-photo").value = "";
   document.querySelector(".category-photo").value = "";
   document.getElementById("fileInput").value = "";
@@ -494,7 +498,94 @@ const checkForm = () => {
 const categoryElement = document.querySelector(".category-photo-modal");
 const category = categoryElement.value;
 
-// Gestionnaire de clic sur le bouton "Valider"
+// **** Gestion du clic sur le bouton "Valider" ****
+const submitButton = document.getElementById("return");
+const fileInput = document.querySelector("input[type=file]");
+const titleInput = document.querySelector(".title-photo");
+const categorySelect = document.querySelector(".category-photo");
+
+// Fonction pour vérifier si tous les champs sont remplis
+function checkFields() {
+  const file = fileInput.files[0];
+  const title = titleInput.value.trim();
+  const category = categorySelect.value;
+
+  // Vérifie si un fichier est sélectionné
+  if (!file) {
+    return false;
+  }
+
+  // Vérifie si un titre est renseigné
+  if (!title) {
+    const titleError = document.getElementById("title-error");
+    titleError.textContent = "Veuillez renseigner le titre.";
+    return false;
+  } else {
+    const titleError = document.getElementById("title-error");
+    titleError.textContent = "";
+  }
+
+  // Vérifie si une catégorie est sélectionnée
+  if (!category) {
+    const categoryError = document.getElementById("category-error");
+    categoryError.textContent = "Veuillez sélectionner une catégorie.";
+    return false;
+  } else {
+    const categoryError = document.getElementById("category-error");
+    categoryError.textContent = "";
+  }
+
+  // Vérifie la taille du fichier (4 Mo maximum)
+  if (file.size > 4 * 1024 * 1024) {
+    const fileError = document.getElementById("file-error");
+    fileError.textContent = "La taille du fichier ne doit pas dépasser 4 Mo.";
+    return false;
+  } else {
+    const fileError = document.getElementById("file-error");
+    fileError.textContent = "";
+  }
+
+  // Vérifie le type de fichier (seuls les jpg et png sont autorisés)
+  const fileType = file.type;
+  if (fileType !== "image/jpeg" && fileType !== "image/png") {
+    const fileError = document.getElementById("file-error");
+    fileError.textContent =
+      "Seuls les fichiers au format JPG ou PNG sont autorisés.";
+    return false;
+  } else {
+    const fileError = document.getElementById("file-error");
+    fileError.textContent = "";
+  }
+
+  return true;
+}
+
+// Gestion de l'apparition de la classe "disabled"
+const returnButton = document.getElementById("return");
+const submitErrorDiv = document.getElementById("submit-error");
+
+returnButton.addEventListener("click", function () {
+  if (returnButton.classList.contains("disabled")) {
+    submitErrorDiv.innerText = "Veuillez remplir tous les champs.";
+  }
+});
+
+// Fonction pour activer ou désactiver le bouton de soumission en fonction des champs remplis
+function toggleSubmitButton() {
+  if (checkFields()) {
+    submitButton.classList.remove("disabled");
+  } else {
+    submitButton.classList.add("disabled");
+  }
+}
+
+// Écouteur d'événement pour vérifier les champs lors de la saisie
+fileInput.addEventListener("change", toggleSubmitButton);
+titleInput.addEventListener("input", toggleSubmitButton);
+categorySelect.addEventListener("change", toggleSubmitButton);
+
+//Ancien code pour la gestion du bouton "Valider"
+/*
 document.getElementById("return").addEventListener("click", async () => {
   // Récupère le titre saisi par l'utilisateur
   const titleElement = document.querySelector(".title-photo");
@@ -565,18 +656,27 @@ document.getElementById("return").addEventListener("click", async () => {
     console.error("Erreur lors de la soumission des données :", error);
   }
 });
+*/
 
 // Fonction pour réinitialiser les champs titre et catégorie de la modale
 function resetModalFields() {
   const titleElement = document.querySelector(".title-photo");
   const categoryElement = document.querySelector(".category-photo");
+  const initialImg = document.getElementById("initialImg");
 
+  // Réinitialise le champ de titre
   if (titleElement) {
     titleElement.value = "";
   }
 
+  // Réinitialise le champ de la catégorie
   if (categoryElement) {
     categoryElement.value = "";
+  }
+
+  // Réinitialise l'image
+  if (initialImg) {
+    initialImg.src = "./assets/icons/add-photo.png";
   }
 }
 
@@ -584,6 +684,9 @@ function resetModalFields() {
 function closeModalAndReset() {
   closeModal(); // Ferme la modale
   resetModalFields(); // Réinitialise les champs de la modale
+
+  // Réinitialise la valeur de l'input de l'image
+  document.getElementById("fileInput").value = "";
 }
 
 // Gestionnaire de clic sur la croix "close" de la modale
@@ -600,7 +703,7 @@ input.onchange = function () {
 
 function drawOnCanvas(file) {
   let reader = new FileReader();
-  reader.onload = function (e, url) {
+  reader.onload = function (e) {
     let dataURL = e.target.result,
       c = document.querySelector("#canvasTarget"),
       ctx = c.getContext("2d"),
@@ -617,11 +720,16 @@ function drawOnCanvas(file) {
 
     img.src = dataURL;
     console.log("dataURL", dataURL);
+
     const initialImg = document.getElementById("initialImg");
-    console.log("initialImg", initialImg);
+    if (!initialImg) {
+      console.error("L'élément initialImg n'a pas été trouvé.");
+      return;
+    }
 
     initialImg.src = dataURL;
   };
 
   reader.readAsDataURL(file);
+  console.log("Image chargée dans le canvas avec succès !");
 }
