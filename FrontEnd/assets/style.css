@@ -538,6 +538,7 @@ font-size: 24px;
 .search-photo {
 	display: flex;
 	justify-content: center;
+	flex-direction: column;
 	width: 100%;
 	height: 169px;
 	margin-bottom: 25px;

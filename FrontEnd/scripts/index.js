@@ -513,10 +513,26 @@ document.getElementById("fileInput").addEventListener("change", (event) => {
 });
 
 const checkForm = () => {
-  if (!errors.fileInput && !errors.title && !errors.category) {
+  /*if (!errors.fileInput && !errors.title && !errors.category) {
     // si tout est OK, mettre disable a "false"
   } else {
     // sinon mettre le disable a "true"
+  }*/
+  const fileInput = document.getElementById("fileInput");
+  const titleInput = document.querySelector(".title-photo");
+  const categorySelect = document.querySelector(".category-photo");
+
+  // Vérifie si tous les champs requis sont remplis
+  if (
+    !errors.fileInput &&
+    titleInput.value.trim() !== "" &&
+    categorySelect.value.trim() !== ""
+  ) {
+    // Si tout est OK, activer le bouton de soumission
+    submitButton.disabled = false;
+  } else {
+    // Sinon, désactiver le bouton de soumission
+    submitButton.disabled = true;
   }
 };
 
@@ -535,51 +551,49 @@ function checkFields() {
   const file = fileInput.files[0];
   const title = titleInput.value.trim();
   const category = categorySelect.value;
+  const fileError = document.getElementById("file-error");
+  const titleError = document.getElementById("title-error");
+  const categoryError = document.getElementById("category-error");
 
   // Vérifie si un fichier est sélectionné
   if (!file) {
+    fileError.textContent = "Veuillez sélectionner une image.";
     return false;
+  } else {
+    fileError.textContent = "";
   }
 
   // Vérifie si un titre est renseigné
   if (!title) {
-    const titleError = document.getElementById("title-error");
-    titleError.textContent = "Veuillez renseigner le titre.";
+    titleError.textContent = "Veuillez renseigner un titre.";
     return false;
   } else {
-    const titleError = document.getElementById("title-error");
     titleError.textContent = "";
   }
 
   // Vérifie si une catégorie est sélectionnée
-  if (!category) {
-    const categoryError = document.getElementById("category-error");
+  if (category === "1") {
     categoryError.textContent = "Veuillez sélectionner une catégorie.";
     return false;
   } else {
-    const categoryError = document.getElementById("category-error");
     categoryError.textContent = "";
   }
 
   // Vérifie la taille du fichier (4 Mo maximum)
   if (file.size > 4 * 1024 * 1024) {
-    const fileError = document.getElementById("file-error");
     fileError.textContent = "La taille du fichier ne doit pas dépasser 4 Mo.";
     return false;
   } else {
-    const fileError = document.getElementById("file-error");
     fileError.textContent = "";
   }
 
   // Vérifie le type de fichier (seuls les jpg et png sont autorisés)
   const fileType = file.type;
   if (fileType !== "image/jpeg" && fileType !== "image/png") {
-    const fileError = document.getElementById("file-error");
     fileError.textContent =
       "Seuls les fichiers au format JPG ou PNG sont autorisés.";
     return false;
   } else {
-    const fileError = document.getElementById("file-error");
     fileError.textContent = "";
   }
 
@@ -598,7 +612,13 @@ returnButton.addEventListener("click", function () {
 
 // Fonction pour activer ou désactiver le bouton de soumission en fonction des champs remplis
 function toggleSubmitButton() {
-  if (checkFields()) {
+  /*if (checkFields()) {
+    submitButton.classList.remove("disabled");
+  } else {
+    submitButton.classList.add("disabled");
+  }*/
+  const allFieldsFilled = checkFields(); // Vérifier si tous les champs sont remplis
+  if (allFieldsFilled) {
     submitButton.classList.remove("disabled");
   } else {
     submitButton.classList.add("disabled");
@@ -606,9 +626,18 @@ function toggleSubmitButton() {
 }
 
 // Écouteur d'événement pour vérifier les champs lors de la saisie
-fileInput.addEventListener("change", toggleSubmitButton);
-titleInput.addEventListener("input", toggleSubmitButton);
-categorySelect.addEventListener("change", toggleSubmitButton);
+fileInput.addEventListener("change", function () {
+  toggleSubmitButton();
+  checkForm();
+});
+titleInput.addEventListener("input", function () {
+  toggleSubmitButton();
+  checkForm();
+});
+categorySelect.addEventListener("change", function () {
+  toggleSubmitButton();
+  checkForm();
+});
 
 document.getElementById("return").addEventListener("click", async () => {
   // Récupère le titre saisi par l'utilisateur
