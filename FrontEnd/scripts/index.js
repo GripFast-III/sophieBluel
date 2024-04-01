@@ -126,7 +126,7 @@ const addEditModeIconAndText = () => {
 
 init();
 
-// Etape 1 : Mettre en place les appels au back
+// Étape 1 : Mettre en place les appels au back
 // Méthode de récupération des travaux dans le back
 async function fetchWorks() {
   try {
@@ -374,10 +374,36 @@ const displayModal = () => {
   document
     .querySelector(".close")
     .addEventListener("click", closeModalAndReset);
+
+  // Création d'un objet FormData pour collecter les données à envoyer lors de l'upload de l'image
+  document.getElementById("return").addEventListener("click", function () {
+    // Récupération de la valeur du titre
+    const titleValue = document.querySelector(".title-photo").value;
+
+    // Récupération de la valeur de la catégorie
+    const categoryValue = document.querySelector(".category-photo").value;
+
+    // Sélection du message d'erreur
+    const submitErrorDiv = document.getElementById("submit-error");
+
+    // Vérification des valeurs récupérées
+    if (titleValue.trim() === "" || categoryValue.trim() === "") {
+      // Affiche le message d'erreur si l'un des champs est vide
+      submitErrorDiv.textContent = "Veuillez remplir tous les champs.";
+      return;
+    }
+
+    // Création d'un objet FormData
+    const formData = new FormData();
+
+    // Ajout des valeurs du titre et de la catégorie à l'objet FormData
+    formData.append("title", titleValue);
+    formData.append("category", categoryValue);
+  });
 };
 
 // Ajoute un gestionnaire d'événements à l'arrière-plan qui fait appel à closeModal()
-// et qui donc réinitialise le visuel lorsque l'on ouvre à nouveau la modale
+// et qui réinitialise le visuel lorsque l'on ouvre à nouveau la modale
 document
   .getElementById("modalBackground")
   .addEventListener("click", function (event) {
@@ -454,7 +480,7 @@ const addButton = document.getElementById("add-pictures");
 addButton.addEventListener("click", () => changeModalContent());
 console.log("🚀 ~ addButton:", addButton);
 
-/* **** Gestion de l'ajout d'une photo **** */
+// **** Gestion de l'ajout d'une photo ****
 
 // Fonction qui gère le clic sur la zone de recherche de photo
 const handleSearchPhotoClick = () => {
@@ -490,7 +516,7 @@ const checkForm = () => {
   if (!errors.fileInput && !errors.title && !errors.category) {
     // si tout est OK, mettre disable a "false"
   } else {
-    // mettre le disable a "true"
+    // sinon mettre le disable a "true"
   }
 };
 
@@ -560,9 +586,9 @@ function checkFields() {
   return true;
 }
 
-// Gestion de l'apparition de la classe "disabled"
+// Gestion de l'apparition du message d'erreur du btn-submit et de la classe "disabled"
 const returnButton = document.getElementById("return");
-const submitErrorDiv = document.getElementById("submit-error");
+const submitErrorDiv = document.querySelectorAll(".error-message"); // <--------- Pas sûr de mon coup
 
 returnButton.addEventListener("click", function () {
   if (returnButton.classList.contains("disabled")) {
@@ -584,52 +610,13 @@ fileInput.addEventListener("change", toggleSubmitButton);
 titleInput.addEventListener("input", toggleSubmitButton);
 categorySelect.addEventListener("change", toggleSubmitButton);
 
-//Ancien code pour la gestion du bouton "Valider"
-/*
 document.getElementById("return").addEventListener("click", async () => {
   // Récupère le titre saisi par l'utilisateur
   const titleElement = document.querySelector(".title-photo");
   const title = titleElement ? titleElement.value.trim() : "";
 
-  // Vérifie si un titre est renseigné
-  if (!title) {
-    alert("Veuillez renseigner le titre."); // Remplacer
-    return;
-  }
-
-  // Récupère la catégorie sélectionnée par l'utilisateur
-  const categoryElement = document.querySelector(".category-photo");
-  const category = categoryElement ? categoryElement.value : "";
-
-  // Vérifie la sélection d'une catégorie
-  if (!category) {
-    alert("Veuillez sélectionner une catégorie."); // Remplacer
-    return;
-  }
-
-  // Vérifie la sélection d'un fichier
-  const fileInput = document.getElementById("fileInput");
-  if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
-    alert("Veuillez sélectionner un fichier."); // Remplacer
-    return;
-  }
-
-  // Vérifier si le fichier est une image
-  const file = fileInput.files[0];
-  if (!file.type.startsWith("image/")) {
-    alert("Veuillez sélectionner une image."); // Remplacer
-    return;
-  }
-
-  // Vérifier le poids du fichier
-  const maxFileSizeInBytes = 4 * 1024 * 1024; // 4 Mo
-  if (file.size > maxFileSizeInBytes) {
-    alert("La taille du fichier dépasse la limite autorisée de 4 Mo."); // Remplacer
-    return;
-  }
-
   // Envoie des données au backend --------------> utiliser la methode formData <--------------
-  try {
+  /*  try {
     const response = await fetch("http://localhost:5678/api/works", {
       method: "POST",
       headers: {
@@ -655,8 +642,41 @@ document.getElementById("return").addEventListener("click", async () => {
   } catch (error) {
     console.error("Erreur lors de la soumission des données :", error);
   }
+});*/
+
+  const file = fileInput.files[0];
+
+  // Crée un objet FormData pour envoyer les données au backend
+  const formData = new FormData();
+  formData.append("title", title);
+  formData.append("category", category);
+  formData.append("file", file);
+
+  try {
+    // Envoie les données au backend via une requête POST
+    const response = await fetch("http://localhost:5678/api/works", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${globalToken}`,
+      },
+      body: formData,
+      //body : JSON.stringify ({
+      //  title: title,
+      //  category: category,
+      //})
+    });
+
+    if (response.ok) {
+      // Si la requête est réussie, recharge la galerie pour afficher le nouveau média
+      init(); // Recharge la galerie des travaux
+      closeModalAndReset(); // Ferme la modale et réinitialise les champs
+    } else {
+      console.error("Erreur lors de l'envoi des données au backend.");
+    }
+  } catch (error) {
+    console.error("Erreur lors de l'envoi des données au backend :", error);
+  }
 });
-*/
 
 // Fonction pour réinitialiser les champs titre et catégorie de la modale
 function resetModalFields() {
@@ -693,7 +713,6 @@ function closeModalAndReset() {
 document.querySelector(".close").addEventListener("click", closeModalAndReset);
 
 /* **** Ajout de l'image téléchargée en mini dans la modal **** */
-
 const input = document.querySelector("input[type=file]");
 
 input.onchange = function () {
