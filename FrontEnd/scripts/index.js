@@ -519,7 +519,7 @@ document.querySelector(".title-photo").addEventListener("input", (event) => {
     titleError.innerHTML = "";
     errors.title = false;
   } else {
-    titleError.innerHTML = "Oups, ça craint";
+    titleError.innerHTML = "Veuillez renseigner un titre";
     errors.title = true;
   }
   checkForm();
@@ -539,7 +539,7 @@ document
       categoryError.innerHTML = "";
       errors.category = false;
     } else {
-      categoryError.innerHTML = "Oups, ça craint";
+      categoryError.innerHTML = "Veuillez sélectionner une catégorie";
       errors.category = true;
     }
     checkForm();
