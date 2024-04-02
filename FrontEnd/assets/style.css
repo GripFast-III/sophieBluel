@@ -410,7 +410,7 @@ font-size: 24px;
 	justify-content: center;
 }
 
-#return {
+#submit-btn {
 	width: 35%;
 	/*background-color: rgb(255, 255, 255);*/
 }
@@ -419,7 +419,7 @@ font-size: 24px;
 	background-color: rgb(255, 255, 255);
 }
 
-#return:hover {
+#submit-btn:hover {
 	background-color: #1D6154;
 }
 

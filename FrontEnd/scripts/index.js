@@ -2,9 +2,9 @@ let allWorks = [];
 let globalToken = null;
 
 let errors = {
-  fileInput: false,
-  title: false,
-  category: false,
+  fileInput: true,
+  title: true,
+  category: true,
 };
 
 // Méthode check connexion
@@ -376,7 +376,7 @@ const displayModal = () => {
     .addEventListener("click", closeModalAndReset);
 
   // Création d'un objet FormData pour collecter les données à envoyer lors de l'upload de l'image
-  document.getElementById("return").addEventListener("click", function () {
+  document.getElementById("submit-btn").addEventListener("click", function () {
     // Récupération de la valeur du titre
     const titleValue = document.querySelector(".title-photo").value;
 
@@ -455,7 +455,6 @@ const closeModal = () => {
 };
 
 // **** Changement du contenu de la modale pour pouvoir ajouter une photo ****
-
 // Fonction pour changer le contenu de la modale lors du clic sur "Ajouter une photo"
 const changeModalContent = () => {
   // Ajoute une classe à la galerie pour l'effet de transition
@@ -481,7 +480,6 @@ addButton.addEventListener("click", () => changeModalContent());
 console.log("🚀 ~ addButton:", addButton);
 
 // **** Gestion de l'ajout d'une photo ****
-
 // Fonction qui gère le clic sur la zone de recherche de photo
 const handleSearchPhotoClick = () => {
   document.getElementById("fileInput").click();
@@ -512,27 +510,50 @@ document.getElementById("fileInput").addEventListener("change", (event) => {
   checkForm();
 });
 
-const checkForm = () => {
-  /*if (!errors.fileInput && !errors.title && !errors.category) {
-    // si tout est OK, mettre disable a "false"
+// Gestionnaire de changement de titre
+document.querySelector(".title-photo").addEventListener("input", (event) => {
+  let currentTitle = event.target.value;
+  console.log("🚀 ~ document.querySelector ~ currentTitle:", currentTitle);
+  const titleError = document.getElementById("title-error");
+  if (currentTitle.length) {
+    titleError.innerHTML = "";
+    errors.title = false;
   } else {
-    // sinon mettre le disable a "true"
-  }*/
-  const fileInput = document.getElementById("fileInput");
-  const titleInput = document.querySelector(".title-photo");
-  const categorySelect = document.querySelector(".category-photo");
+    titleError.innerHTML = "Oups, ça craint";
+    errors.title = true;
+  }
+  checkForm();
+});
+
+// Gestionnaire de changement de catégorie
+document
+  .querySelector(".category-photo")
+  .addEventListener("change", (event) => {
+    let currentCategory = event.target.value;
+    console.log(
+      "🚀 ~ document.querySelector ~ currentCategory:",
+      currentCategory
+    );
+    const categoryError = document.getElementById("category-error");
+    if (currentCategory !== "0") {
+      categoryError.innerHTML = "";
+      errors.category = false;
+    } else {
+      categoryError.innerHTML = "Oups, ça craint";
+      errors.category = true;
+    }
+    checkForm();
+  });
+
+const checkForm = () => {
+  const submitButton = document.getElementById("submit-btn");
 
   // Vérifie si tous les champs requis sont remplis
-  if (
-    !errors.fileInput &&
-    titleInput.value.trim() !== "" &&
-    categorySelect.value.trim() !== ""
-  ) {
-    // Si tout est OK, activer le bouton de soumission
-    submitButton.disabled = false;
-  } else {
-    // Sinon, désactiver le bouton de soumission
+  if (errors.fileInput || errors.title || errors.category) {
     submitButton.disabled = true;
+  } else {
+    submitButton.disabled = false;
+    submitButton.classList.remove("disabled");
   }
 };
 
@@ -541,89 +562,20 @@ const categoryElement = document.querySelector(".category-photo-modal");
 const category = categoryElement.value;
 
 // **** Gestion du clic sur le bouton "Valider" ****
-const submitButton = document.getElementById("return");
 const fileInput = document.querySelector("input[type=file]");
 const titleInput = document.querySelector(".title-photo");
 const categorySelect = document.querySelector(".category-photo");
 
-// Fonction pour vérifier si tous les champs sont remplis
-function checkFields() {
-  const file = fileInput.files[0];
-  const title = titleInput.value.trim();
-  const category = categorySelect.value;
-  const fileError = document.getElementById("file-error");
-  const titleError = document.getElementById("title-error");
-  const categoryError = document.getElementById("category-error");
-
-  // Vérifie si un fichier est sélectionné
-  if (!file) {
-    fileError.textContent = "Veuillez sélectionner une image.";
-    return false;
-  } else {
-    fileError.textContent = "";
-  }
-
-  // Vérifie si un titre est renseigné
-  if (!title) {
-    titleError.textContent = "Veuillez renseigner un titre.";
-    return false;
-  } else {
-    titleError.textContent = "";
-  }
-
-  // Vérifie si une catégorie est sélectionnée
-  if (category === "1") {
-    categoryError.textContent = "Veuillez sélectionner une catégorie.";
-    return false;
-  } else {
-    categoryError.textContent = "";
-  }
-
-  // Vérifie la taille du fichier (4 Mo maximum)
-  if (file.size > 4 * 1024 * 1024) {
-    fileError.textContent = "La taille du fichier ne doit pas dépasser 4 Mo.";
-    return false;
-  } else {
-    fileError.textContent = "";
-  }
-
-  // Vérifie le type de fichier (seuls les jpg et png sont autorisés)
-  const fileType = file.type;
-  if (fileType !== "image/jpeg" && fileType !== "image/png") {
-    fileError.textContent =
-      "Seuls les fichiers au format JPG ou PNG sont autorisés.";
-    return false;
-  } else {
-    fileError.textContent = "";
-  }
-
-  return true;
-}
-
 // Gestion de l'apparition du message d'erreur du btn-submit et de la classe "disabled"
-const returnButton = document.getElementById("return");
-const submitErrorDiv = document.querySelectorAll(".error-message"); // <--------- Pas sûr de mon coup
+const validationButton = document.getElementById("submit-btn");
+//const submitErrorDiv = document.querySelectorAll(".error-message");
 
-returnButton.addEventListener("click", function () {
-  if (returnButton.classList.contains("disabled")) {
-    submitErrorDiv.innerText = "Veuillez remplir tous les champs.";
-  }
+validationButton.addEventListener("click", function () {
+  console.log("click OK");
+  //if (validationButton.classList.contains("disabled")) {
+  //submitErrorDiv.innerText = "Veuillez remplir tous les champs.";
+  // }
 });
-
-// Fonction pour activer ou désactiver le bouton de soumission en fonction des champs remplis
-function toggleSubmitButton() {
-  /*if (checkFields()) {
-    submitButton.classList.remove("disabled");
-  } else {
-    submitButton.classList.add("disabled");
-  }*/
-  const allFieldsFilled = checkFields(); // Vérifier si tous les champs sont remplis
-  if (allFieldsFilled) {
-    submitButton.classList.remove("disabled");
-  } else {
-    submitButton.classList.add("disabled");
-  }
-}
 
 // Écouteur d'événement pour vérifier les champs lors de la saisie
 fileInput.addEventListener("change", function () {
@@ -639,40 +591,12 @@ categorySelect.addEventListener("change", function () {
   checkForm();
 });
 
-document.getElementById("return").addEventListener("click", async () => {
+document.getElementById("submit-btn").addEventListener("click", async () => {
   // Récupère le titre saisi par l'utilisateur
   const titleElement = document.querySelector(".title-photo");
   const title = titleElement ? titleElement.value.trim() : "";
 
   // Envoie des données au backend --------------> utiliser la methode formData <--------------
-  /*  try {
-    const response = await fetch("http://localhost:5678/api/works", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${globalToken}`,
-      },
-      body: JSON.stringify({
-        title: title,
-        category: category,
-      }),
-    });
-
-    if (response.ok) {
-      // Réinitialise les champs du formulaire après avoir soumis avec succès les données
-      titleElement.value = "";
-      categoryElement.value = "";
-
-      // Fermer la modale
-      closeModal();
-    } else {
-      console.error("Erreur lors de la soumission des données.");
-    }
-  } catch (error) {
-    console.error("Erreur lors de la soumission des données :", error);
-  }
-});*/
-
   const file = fileInput.files[0];
 
   // Crée un objet FormData pour envoyer les données au backend
@@ -689,15 +613,10 @@ document.getElementById("return").addEventListener("click", async () => {
         Authorization: `Bearer ${globalToken}`,
       },
       body: formData,
-      //body : JSON.stringify ({
-      //  title: title,
-      //  category: category,
-      //})
     });
 
     if (response.ok) {
       // Si la requête est réussie, recharge la galerie pour afficher le nouveau média
-      init(); // Recharge la galerie des travaux
       closeModalAndReset(); // Ferme la modale et réinitialise les champs
     } else {
       console.error("Erreur lors de l'envoi des données au backend.");
