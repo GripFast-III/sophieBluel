@@ -594,22 +594,21 @@ categorySelect.addEventListener("change", function () {
 document.getElementById("submit-btn").addEventListener("click", async () => {
   // Récupère le titre saisi par l'utilisateur
   const titleElement = document.querySelector(".title-photo");
+  const category = document.querySelector(".category-photo").value;
+  console.log("🚀 ~ document.getElementById ~ category:", category)
   const title = titleElement ? titleElement.value.trim() : "";
+  console.log("🚀 ~ document.getElementById ~ title:", title)
 
   // Envoie des données au backend --------------> utiliser la methode formData <--------------
   const file = fileInput.files[0];
 
   // Crée un objet FormData pour envoyer les données au backend
-  const dataForm = document.getElementById("modal_form");
-  console.log("🚀 ~ document.getElementById ~ dataForm:", dataForm)
+  const formData = new FormData
 
-  const formData = new FormData(dataForm);
-  console.log("🚀 ~ document.getElementById ~ formData:", formData)
+  formData.append("title", title);
+  formData.append("category", Number(category));
+  formData.append("image", file);
   
-  // formData.append("title", title);
-  // formData.append("category", category);
-  // formData.append("image", file);
-
   try {
     // Envoie les données au backend via une requête POST
     const response = await fetch("http://localhost:5678/api/works", {
