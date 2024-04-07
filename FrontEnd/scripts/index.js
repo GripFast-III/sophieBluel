@@ -579,15 +579,15 @@ validationButton.addEventListener("click", function () {
 
 // Écouteur d'événement pour vérifier les champs lors de la saisie
 fileInput.addEventListener("change", function () {
-  toggleSubmitButton();
+  // toggleSubmitButton();
   checkForm();
 });
 titleInput.addEventListener("input", function () {
-  toggleSubmitButton();
+  // toggleSubmitButton();
   checkForm();
 });
 categorySelect.addEventListener("change", function () {
-  toggleSubmitButton();
+  // toggleSubmitButton();
   checkForm();
 });
 
@@ -600,10 +600,15 @@ document.getElementById("submit-btn").addEventListener("click", async () => {
   const file = fileInput.files[0];
 
   // Crée un objet FormData pour envoyer les données au backend
-  const formData = new FormData();
-  formData.append("title", title);
-  formData.append("category", category);
-  formData.append("file", file);
+  const dataForm = document.getElementById("modal_form");
+  console.log("🚀 ~ document.getElementById ~ dataForm:", dataForm)
+
+  const formData = new FormData(dataForm);
+  console.log("🚀 ~ document.getElementById ~ formData:", formData)
+  
+  // formData.append("title", title);
+  // formData.append("category", category);
+  // formData.append("image", file);
 
   try {
     // Envoie les données au backend via une requête POST
