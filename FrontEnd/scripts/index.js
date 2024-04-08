@@ -187,6 +187,12 @@ function displayButtons(categories) {
   });
 }
 
+// Étape 4 : Ajouter les méthodes display pour afficher un travail de plus
+
+function displayOneWorks(work) {
+  allWorks.push(work)
+  displayWorks(allWorks)
+}
 const filterWorksByCategory = (id) => {
   console.log("id", id);
   console.log("allWorks", allWorks);
@@ -608,6 +614,7 @@ document.getElementById("submit-btn").addEventListener("click", async () => {
   formData.append("title", title);
   formData.append("category", Number(category));
   formData.append("image", file);
+
   
   try {
     // Envoie les données au backend via une requête POST
@@ -622,6 +629,10 @@ document.getElementById("submit-btn").addEventListener("click", async () => {
     if (response.ok) {
       // Si la requête est réussie, recharge la galerie pour afficher le nouveau média
       closeModalAndReset(); // Ferme la modale et réinitialise les champs
+      let backReturn = await response.json()
+      displayOneWorks(backReturn)
+      console.log("🚀 ~ document.getElementById ~ backReturn:", backReturn)
+
     } else {
       console.error("Erreur lors de l'envoi des données au backend.");
     }
@@ -697,7 +708,6 @@ function drawOnCanvas(file) {
       console.error("L'élément initialImg n'a pas été trouvé.");
       return;
     }
-
     initialImg.src = dataURL;
   };
 
