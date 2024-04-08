@@ -155,7 +155,7 @@ async function fetchCategories() {
 
 // Étape 2 : Ajouter les méthodes display pour afficher les travaux
 function displayWorks(works) {
-  const gallery = document.querySelector(".gallery");
+  const gallery = document.querySelector(".gallery-index");
   gallery.innerHTML = ""; // Efface le contenu précédent de la galerie
   works.forEach((work) => {
     const figure = document.createElement("figure");
@@ -191,7 +191,12 @@ function displayButtons(categories) {
 
 function displayOneWorks(work) {
   allWorks.push(work)
-  displayWorks(allWorks)
+  const galleryIndex = document.getElementById("galleryIndex");
+  console.log("🚀 ~ displayOneWorks ~ galleryIndex:", galleryIndex)
+  const newFigure = document.createElement("figure");
+  newFigure.dataset.id = work.id;
+  newFigure.innerHTML = `<img src="${work.imageUrl}" alt="${work.title}"/ ><figcaption>${work.title}</figcaption>`;
+  galleryIndex.appendChild(newFigure);
 }
 const filterWorksByCategory = (id) => {
   console.log("id", id);
@@ -252,7 +257,7 @@ const handleLogout = () => {
 const displayModal = () => {
   const modal = document.getElementById("myModal");
   const modalBackground = document.getElementById("modalBackground");
-  const gallery = document.querySelector(".gallery");
+  const gallery = document.querySelector(".gallery-index");
   const clonedGallery = gallery.cloneNode(true); // Clone la galerie avec toutes les <figure>
 
   // Vide la galerie de la modale

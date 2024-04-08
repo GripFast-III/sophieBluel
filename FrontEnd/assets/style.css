@@ -224,7 +224,7 @@ button:hover {
 	color:#FFFFFF;
 }
 
-.gallery {
+.gallery-index {
 	width: 100%;
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
@@ -232,7 +232,7 @@ button:hover {
 	grid-row-gap: 20px;
 }
 
-.gallery img {
+.gallery-index img {
 	width: 100%;
 
 }
@@ -459,12 +459,12 @@ font-size: 24px;
 	height: 400px;
 }
 
-.gallery-modal .gallery figure {
+.gallery-modal .gallery-index figure {
 	width: 75px;
 	height: 102px;
 }
 
-.gallery-modal .gallery {
+.gallery-modal .gallery-index {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: left;
@@ -472,7 +472,7 @@ font-size: 24px;
 	gap: 10px;
 }
 
-.gallery-modal .gallery figure figcaption {
+.gallery-modal .gallery-index figure figcaption {
 	display: none;
 }
 
