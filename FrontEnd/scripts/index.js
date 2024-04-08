@@ -1,3 +1,10 @@
+/*localStorage.setItem(
+  "token",
+  JSON.stringify(
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxMjU3NTYzMiwiZXhwIjoxNzEyNjYyMDMyfQ.JMUU3pdfTlPYkCjdVx2l0q5J1euB26hIzKKp69VJfO8"
+  )
+);*/
+
 let allWorks = [];
 let globalToken = null;
 
@@ -155,6 +162,7 @@ async function fetchCategories() {
 
 // Étape 2 : Ajouter les méthodes display pour afficher les travaux
 function displayWorks(works) {
+  console.log("🚀 ~ displayWorks ~ works:", works);
   const gallery = document.querySelector(".gallery");
   gallery.innerHTML = ""; // Efface le contenu précédent de la galerie
   works.forEach((work) => {
@@ -592,6 +600,17 @@ categorySelect.addEventListener("change", function () {
   checkForm();
 });
 
+const displayOneWork = (newWork) => {
+  console.log("🚀 ~ displayOneWork ~ newWork:", newWork);
+  const gallery = document.querySelector(".gallery");
+  console.log("🚀 ~ displayOneWork ~ gallery:", gallery);
+  const figure = document.createElement("figure");
+  figure.dataset.id = newWork.id;
+  figure.innerHTML = `<img src="${newWork.imageUrl}" class="img-modal" alt="${newWork.title}"/ ><figcaption>${newWork.title}</figcaption>`;
+  gallery.appendChild(figure);
+  console.log("🚀 ~ displayOneWork ~ figure:", figure);
+};
+
 document.getElementById("submit-btn").addEventListener("click", async () => {
   // Récupère le titre saisi par l'utilisateur
   const titleElement = document.querySelector(".title-photo");
@@ -600,7 +619,7 @@ document.getElementById("submit-btn").addEventListener("click", async () => {
   const title = titleElement ? titleElement.value.trim() : "";
   console.log("🚀 ~ document.getElementById ~ title:", title);
 
-  // Envoie des données au backend --------------> utiliser la methode formData <--------------
+  // Envoie des données au backend
   const file = fileInput.files[0];
 
   // Crée un objet FormData pour envoyer les données au backend
@@ -622,6 +641,11 @@ document.getElementById("submit-btn").addEventListener("click", async () => {
 
     if (response.ok) {
       // Si la requête est réussie, recharge la galerie pour afficher le nouveau média
+      let newItem = await response.json();
+      console.log("🚀 ~ document.getElementById ~ newItem:", newItem);
+      //allWorks.push(newItem); // Intègre le nouvel item dans la liste de tous les travaux (médias)
+      displayOneWork(newItem);
+      //displayWorks(newWorks);
       closeModalAndReset(); // Ferme la modale et réinitialise les champs
     } else {
       console.error("Erreur lors de l'envoi des données au backend.");
@@ -633,24 +657,8 @@ document.getElementById("submit-btn").addEventListener("click", async () => {
 
 // Fonction pour réinitialiser les champs titre et catégorie de la modale
 function resetModalFields() {
-  const titleElement = document.querySelector(".title-photo");
-  const categoryElement = document.querySelector(".category-photo");
-  const initialImg = document.getElementById("initialImg");
-
-  // Réinitialise le champ de titre
-  if (titleElement) {
-    titleElement.value = "";
-  }
-
-  // Réinitialise le champ de la catégorie
-  if (categoryElement) {
-    categoryElement.value = "";
-  }
-
-  // Réinitialise l'image
-  if (initialImg) {
-    initialImg.src = "./assets/icons/add-photo.png";
-  }
+  const form = document.getElementById("modal_form");
+  form.reset(); // Reset l'ensemble des champs en même temps grace au <form< dans le html
 }
 
 // Fonction pour fermer la modale et réinitialiser les champs
@@ -658,7 +666,7 @@ function closeModalAndReset() {
   closeModal(); // Ferme la modale
   resetModalFields(); // Réinitialise les champs de la modale
 
-  // Réinitialise la valeur de l'input de l'image
+  // Réinitialise la valeur de l'input du preview de l'image
   document.getElementById("fileInput").value = "";
 }
 
