@@ -160,7 +160,7 @@ function displayWorks(works) {
   works.forEach((work) => {
     const figure = document.createElement("figure");
     figure.dataset.id = work.id;
-    figure.innerHTML = `<img src="${work.imageUrl}" alt="${work.title}"/ ><figcaption>${work.title}</figcaption>`;
+    figure.innerHTML = `<img src="${work.imageUrl}" class="img-modal" alt="${work.title}"/ ><figcaption>${work.title}</figcaption>`;
     gallery.appendChild(figure);
   });
 }
@@ -471,6 +471,7 @@ const changeModalContent = () => {
   // Ajout d'un gestionnaire d'événements pour le clic sur l'icône de retour
   returnArrow.addEventListener("click", function () {
     console.log("🚀 ~ returnArrow:", returnArrow);
+    resetModalFields();
   });
 };
 
@@ -570,26 +571,44 @@ const categorySelect = document.querySelector(".category-photo");
 const validationButton = document.getElementById("submit-btn");
 //const submitErrorDiv = document.querySelectorAll(".error-message");
 
-//validationButton.addEventListener("click", function () {
-//console.log("click OK");
-//if (validationButton.classList.contains("disabled")) {
-//submitErrorDiv.innerText = "Veuillez remplir tous les champs.";
-// }
-//});
+validationButton.addEventListener("click", function () {
+  console.log("click OK");
+  //if (validationButton.classList.contains("disabled")) {
+  //submitErrorDiv.innerText = "Veuillez remplir tous les champs.";
+  // }
+});
 
-/*document.getElementById("submit-btn").addEventListener("click", async () => {
+// Écouteur d'événement pour vérifier les champs lors de la saisie
+fileInput.addEventListener("change", function () {
+  // toggleSubmitButton();
+  checkForm();
+});
+titleInput.addEventListener("input", function () {
+  // toggleSubmitButton();
+  checkForm();
+});
+categorySelect.addEventListener("change", function () {
+  // toggleSubmitButton();
+  checkForm();
+});
+
+document.getElementById("submit-btn").addEventListener("click", async () => {
   // Récupère le titre saisi par l'utilisateur
   const titleElement = document.querySelector(".title-photo");
+  const category = document.querySelector(".category-photo").value;
+  console.log("🚀 ~ document.getElementById ~ category:", category);
   const title = titleElement ? titleElement.value.trim() : "";
+  console.log("🚀 ~ document.getElementById ~ title:", title);
 
-  // Envoie des données au backend
+  // Envoie des données au backend --------------> utiliser la methode formData <--------------
   const file = fileInput.files[0];
 
   // Crée un objet FormData pour envoyer les données au backend
   const formData = new FormData();
+
   formData.append("title", title);
-  formData.append("category", category);
-  formData.append("file", file);
+  formData.append("category", Number(category));
+  formData.append("image", file);
 
   try {
     // Envoie les données au backend via une requête POST
@@ -610,7 +629,7 @@ const validationButton = document.getElementById("submit-btn");
   } catch (error) {
     console.error("Erreur lors de l'envoi des données au backend :", error);
   }
-});*/
+});
 
 // Fonction pour réinitialiser les champs titre et catégorie de la modale
 function resetModalFields() {
@@ -686,96 +705,3 @@ function drawOnCanvas(file) {
   reader.readAsDataURL(file);
   console.log("Image chargée dans le canvas avec succès !");
 }
-
-// Récupération et vérification des champs avant soumission au Backend
-// Function pour préparer les données du formulaire
-function prepareFormData() {
-  // Récupération de la valeur du titre
-  const titleValue = document.querySelector(".title-photo").value.trim();
-
-  // Récupération de la valeur de la catégorie
-  const categoryValue = document.querySelector(".category-photo").value;
-
-  // Récupération du fichier sélectionné
-  const fileInput = document.getElementById("fileInput");
-  const file = fileInput.files[0];
-
-  // Vérification des champs
-  if (!titleValue || !categoryValue || !file) {
-    // Afficher un message d'erreur ou gérer le cas où un champ est vide
-    console.error("Veuillez remplir tous les champs.");
-    return null; // Sortir de la fonction si un champ est vide
-  }
-
-  // Création de l'objet FormData et ajout des données
-  const formData = new FormData();
-  formData.append("title", titleValue);
-  formData.append("category", categoryValue);
-  formData.append("file", file);
-
-  return formData; // Retourner l'objet FormData préparé
-}
-
-// Gestionnaire de clic sur le bouton "Valider"
-document.getElementById("submit-btn").addEventListener("click", async () => {
-  // Préparation des données du formulaire
-  const formData = prepareFormData();
-  console.log("🚀 ~ document.getElementById ~ formData:", formData);
-
-  // Vérification si les données du formulaire sont prêtes
-  if (formData) {
-    try {
-      // Envoi des données au backend via une requête POST
-      const response = await fetch("http://localhost:5678/api/works", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${globalToken}`,
-        },
-        body: formData,
-      });
-
-      if (response.ok) {
-        console.log("🚀 ~ document.getElementById ~ response:", response);
-        // Si la requête est réussie, réinitialise le formulaire
-        closeModalAndReset();
-      } else {
-        console.error("Erreur lors de l'envoi des données au backend.");
-      }
-    } catch (error) {
-      console.error("Erreur lors de l'envoi des données au backend :", error);
-    }
-  }
-});
-
-// Fonction pour activer ou désactiver le bouton de soumission en fonction de l'état des champs du formulaire
-function toggleSubmitButton() {
-  const fileInput = document.getElementById("fileInput");
-  const titleInput = document.querySelector(".title-photo");
-  const categorySelect = document.querySelector(".category-photo");
-  const submitButton = document.getElementById("submit-btn");
-
-  // Vérifie si tous les champs requis sont remplis
-  if (
-    fileInput.value &&
-    titleInput.value.trim() &&
-    categorySelect.value.trim()
-  ) {
-    submitButton.disabled = false; // Active le bouton de soumission
-  } else {
-    submitButton.disabled = true; // Désactive le bouton de soumission
-  }
-}
-
-// Écouteur d'événement pour vérifier les champs lors de la saisie
-fileInput.addEventListener("change", function () {
-  toggleSubmitButton();
-  checkForm();
-});
-titleInput.addEventListener("input", function () {
-  toggleSubmitButton();
-  checkForm();
-});
-categorySelect.addEventListener("change", function () {
-  toggleSubmitButton();
-  checkForm();
-});
