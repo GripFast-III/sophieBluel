@@ -1,10 +1,3 @@
-/*localStorage.setItem(
-  "token",
-  JSON.stringify(
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxMjU3NTYzMiwiZXhwIjoxNzEyNjYyMDMyfQ.JMUU3pdfTlPYkCjdVx2l0q5J1euB26hIzKKp69VJfO8"
-  )
-);*/
-
 let allWorks = [];
 let globalToken = null;
 
@@ -162,13 +155,12 @@ async function fetchCategories() {
 
 // Étape 2 : Ajouter les méthodes display pour afficher les travaux
 function displayWorks(works) {
-  console.log("🚀 ~ displayWorks ~ works:", works);
-  const gallery = document.querySelector(".gallery");
+  const gallery = document.querySelector(".gallery-index");
   gallery.innerHTML = ""; // Efface le contenu précédent de la galerie
   works.forEach((work) => {
     const figure = document.createElement("figure");
     figure.dataset.id = work.id;
-    figure.innerHTML = `<img src="${work.imageUrl}" class="img-modal" alt="${work.title}"/ ><figcaption>${work.title}</figcaption>`;
+    figure.innerHTML = `<img src="${work.imageUrl}" alt="${work.title}"/ ><figcaption>${work.title}</figcaption>`;
     gallery.appendChild(figure);
   });
 }
@@ -195,6 +187,17 @@ function displayButtons(categories) {
   });
 }
 
+// Étape 4 : Ajouter les méthodes display pour afficher un travail de plus
+
+function displayOneWorks(work) {
+  allWorks.push(work);
+  const galleryIndex = document.getElementById("galleryIndex");
+  console.log("🚀 ~ displayOneWorks ~ galleryIndex:", galleryIndex);
+  const newFigure = document.createElement("figure");
+  newFigure.dataset.id = work.id;
+  newFigure.innerHTML = `<img src="${work.imageUrl}" alt="${work.title}"/ ><figcaption>${work.title}</figcaption>`;
+  galleryIndex.appendChild(newFigure);
+}
 const filterWorksByCategory = (id) => {
   console.log("id", id);
   console.log("allWorks", allWorks);
@@ -254,7 +257,7 @@ const handleLogout = () => {
 const displayModal = () => {
   const modal = document.getElementById("myModal");
   const modalBackground = document.getElementById("modalBackground");
-  const gallery = document.querySelector(".gallery");
+  const gallery = document.querySelector(".gallery-index");
   const clonedGallery = gallery.cloneNode(true); // Clone la galerie avec toutes les <figure>
 
   // Vide la galerie de la modale
@@ -479,7 +482,6 @@ const changeModalContent = () => {
   // Ajout d'un gestionnaire d'événements pour le clic sur l'icône de retour
   returnArrow.addEventListener("click", function () {
     console.log("🚀 ~ returnArrow:", returnArrow);
-    resetModalFields();
   });
 };
 
@@ -600,17 +602,6 @@ categorySelect.addEventListener("change", function () {
   checkForm();
 });
 
-const displayOneWork = (newWork) => {
-  console.log("🚀 ~ displayOneWork ~ newWork:", newWork);
-  const gallery = document.querySelector(".gallery");
-  console.log("🚀 ~ displayOneWork ~ gallery:", gallery);
-  const figure = document.createElement("figure");
-  figure.dataset.id = newWork.id;
-  figure.innerHTML = `<img src="${newWork.imageUrl}" class="img-modal" alt="${newWork.title}"/ ><figcaption>${newWork.title}</figcaption>`;
-  gallery.appendChild(figure);
-  console.log("🚀 ~ displayOneWork ~ figure:", figure);
-};
-
 document.getElementById("submit-btn").addEventListener("click", async () => {
   // Récupère le titre saisi par l'utilisateur
   const titleElement = document.querySelector(".title-photo");
@@ -619,7 +610,7 @@ document.getElementById("submit-btn").addEventListener("click", async () => {
   const title = titleElement ? titleElement.value.trim() : "";
   console.log("🚀 ~ document.getElementById ~ title:", title);
 
-  // Envoie des données au backend
+  // Envoie des données au backend --------------> utiliser la methode formData <--------------
   const file = fileInput.files[0];
 
   // Crée un objet FormData pour envoyer les données au backend
@@ -641,12 +632,10 @@ document.getElementById("submit-btn").addEventListener("click", async () => {
 
     if (response.ok) {
       // Si la requête est réussie, recharge la galerie pour afficher le nouveau média
-      let newItem = await response.json();
-      console.log("🚀 ~ document.getElementById ~ newItem:", newItem);
-      //allWorks.push(newItem); // Intègre le nouvel item dans la liste de tous les travaux (médias)
-      displayOneWork(newItem);
-      //displayWorks(newWorks);
       closeModalAndReset(); // Ferme la modale et réinitialise les champs
+      let backReturn = await response.json();
+      displayOneWorks(backReturn);
+      console.log("🚀 ~ document.getElementById ~ backReturn:", backReturn);
     } else {
       console.error("Erreur lors de l'envoi des données au backend.");
     }
@@ -657,8 +646,24 @@ document.getElementById("submit-btn").addEventListener("click", async () => {
 
 // Fonction pour réinitialiser les champs titre et catégorie de la modale
 function resetModalFields() {
-  const form = document.getElementById("modal_form");
-  form.reset(); // Reset l'ensemble des champs en même temps grace au <form< dans le html
+  const titleElement = document.querySelector(".title-photo");
+  const categoryElement = document.querySelector(".category-photo");
+  const initialImg = document.getElementById("initialImg");
+
+  // Réinitialise le champ de titre
+  if (titleElement) {
+    titleElement.value = "";
+  }
+
+  // Réinitialise le champ de la catégorie
+  if (categoryElement) {
+    categoryElement.value = "";
+  }
+
+  // Réinitialise l'image
+  if (initialImg) {
+    initialImg.src = "./assets/icons/add-photo.png";
+  }
 }
 
 // Fonction pour fermer la modale et réinitialiser les champs
@@ -666,7 +671,7 @@ function closeModalAndReset() {
   closeModal(); // Ferme la modale
   resetModalFields(); // Réinitialise les champs de la modale
 
-  // Réinitialise la valeur de l'input du preview de l'image
+  // Réinitialise la valeur de l'input de l'image
   document.getElementById("fileInput").value = "";
 }
 
@@ -706,7 +711,6 @@ function drawOnCanvas(file) {
       console.error("L'élément initialImg n'a pas été trouvé.");
       return;
     }
-
     initialImg.src = dataURL;
   };
 

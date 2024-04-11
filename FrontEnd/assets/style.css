@@ -54,9 +54,6 @@ table {
 	background-color: black;
 	width: 100%;
 	height: 50px;
-	position: absolute;
-	top: 0;
-	left: 0;
 }
 
 .edit-mode-container {
@@ -84,8 +81,7 @@ body {
 header {
 	display: flex;
 	justify-content: space-between;
-	margin: 50px 0;
-	padding-top: 15px;
+	margin: 50px 0
 }
 section {
 	margin: 50px 0
@@ -228,7 +224,7 @@ button:hover {
 	color:#FFFFFF;
 }
 
-.gallery {
+.gallery-index {
 	width: 100%;
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
@@ -236,11 +232,9 @@ button:hover {
 	grid-row-gap: 20px;
 }
 
-.gallery img {
-	/*width: 100%;*/
-	/*object-fit: cover;*/
-	width: 310px;
-	height: 413px;
+.gallery-index img {
+	width: 100%;
+
 }
 #contact {
 	width: 50%;
@@ -376,8 +370,6 @@ footer nav ul:hover{
 	left: 50%;
 	transform: translate(-50%, -50%);
 	z-index: 9999;
-	max-height: 90%;
-  	overflow-y: auto;
 }
   
 .modal-content {
@@ -467,12 +459,12 @@ font-size: 24px;
 	height: 400px;
 }
 
-.gallery-modal .gallery figure {
+.gallery-modal .gallery-index figure {
 	width: 75px;
 	height: 102px;
 }
 
-.gallery-modal .gallery {
+.gallery-modal .gallery-index {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: left;
@@ -480,13 +472,8 @@ font-size: 24px;
 	gap: 10px;
 }
 
-.gallery-modal .gallery figure figcaption {
+.gallery-modal .gallery-index figure figcaption {
 	display: none;
-}
-
-.gallery-modal .gallery .img-modal {
-	width: 75px;
-	height: 102px;
 }
 
 .fa-trash-can {
