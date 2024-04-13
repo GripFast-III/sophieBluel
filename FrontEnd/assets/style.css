@@ -234,11 +234,12 @@ button:hover {
 
 .gallery-index img {
 	width: 100%;
-
+	height: 100%;
+	object-fit: cover;	
 }
 #contact {
 	width: 50%;
-margin: auto;
+	margin: auto;
 }
 #contact > * {
 	text-align: center;
@@ -296,7 +297,6 @@ footer nav ul:hover{
 }
 
 /** Log In **/
-
 #login {
 	display: flex;
 	flex-direction: column;
@@ -373,25 +373,27 @@ footer nav ul:hover{
 }
   
 .modal-content {
-background-color: #fefefe;
-padding: 20px;
-border-radius: 5px;
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-/*width: 630px;*/
+	background-color: #fefefe;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	/*width: 630px;*/
 }
 
 .close {
-position: absolute;
-top: 30px;
-right: 30px;
-cursor: pointer;
-font-size: 24px;
+	position: absolute;
+	top: 30px;
+	right: 30px;
+	cursor: pointer;
+	font-size: 24px;
 }
 
 #myModal {
 	display: none;
 	justify-content: center;
 	width: 630px;
+	max-height: 100vh;
+	overflow: auto;
 }
 
 .modal-background {
@@ -476,6 +478,12 @@ font-size: 24px;
 	display: none;
 }
 
+.modal-content .container-content .gallery-modal .gallery-index figure img {
+	width: 75px;
+	height: 102px;
+	object-fit: cover;
+}
+
 .fa-trash-can {
 	position: relative;
 	left: 55px;
@@ -530,7 +538,7 @@ font-size: 24px;
 	width: 100%;
 }
 
-.text-and-category h3 {
+.text-and-category label {
 	margin-bottom: 5%;
 	width: 60%;
 }
@@ -541,7 +549,7 @@ font-size: 24px;
 	flex-direction: column;
 	width: 100%;
 	height: 169px;
-	margin-bottom: 25px;
+	/*margin-bottom: 25px;*/
 }
 
 .search-photo:hover {
@@ -593,7 +601,7 @@ font-size: 24px;
 	display: flex;
 	justify-content: center;
 	color: red;
-	margin-bottom: 20px;
+	margin-bottom: 15px;
 }
 
 .title-photo-modal,
@@ -604,11 +612,6 @@ font-size: 24px;
 	align-items: center;
 	width: 100%;
 	border: none;
-	margin-bottom: 3%;
-}
-
-.category-photo-modal {
-	margin-bottom: 2%;
 }
 
 .category-photo {

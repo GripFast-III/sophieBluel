@@ -43,7 +43,6 @@ const init = async () => {
   if (iAmConnected) {
     // Appelle la fonction pour ajouter l'icône à côté du titre "Mes Projets"
     showBlackBar();
-    //addEditModeIconAndText();
     updateLoginLink();
     // Ajout de l'événement de clic à la div parente
     document
@@ -102,24 +101,24 @@ const showBlackBar = () => {
 };
 
 const addEditModeIconAndText = () => {
-  // Créer un élément <i> pour l'icône "Mode édition"
+  // Créé un élément <i> pour l'icône "Mode édition"
   const icon = document.createElement("i");
-  // Ajouter les classes d'icône appropriées
+  // Ajoute les classes d'icône appropriées
   icon.classList.add("fa-solid", "fa-pen-to-square");
 
-  // Créer un élément <span> pour le texte "Mode édition"
+  // Créé un élément <span> pour le texte "Mode édition"
   const textSpan = document.createElement("span");
   textSpan.textContent = "Mode édition";
 
-  // Créer un élément <div> pour contenir l'icône et le texte
+  // Créé un élément <div> pour contenir l'icône et le texte
   const editModeContainer = document.createElement("div");
   editModeContainer.classList.add("edit-mode-container");
 
-  // Ajouter l'icône et le texte au conteneur
+  // Ajoute l'icône et le texte au conteneur
   editModeContainer.appendChild(icon);
   editModeContainer.appendChild(textSpan);
 
-  // Ajouter le conteneur à la black bar
+  // Ajoute le conteneur à la black bar
   const blackBar = document.querySelector(".black-bar");
   blackBar.appendChild(editModeContainer);
 };
@@ -171,7 +170,7 @@ function displayButtons(categories) {
   filters.innerHTML = "";
 
   categories.forEach((category) => {
-    const li = document.createElement("li"); // À changer par une creation d'élément avec createElement
+    const li = document.createElement("li");
     const button = document.createElement("button");
     const paragraph = document.createElement("p"); // Crée un élément <p>
     const buttonText = document.createTextNode(category.name); // Crée un nœud texte avec le nom de la catégorie
@@ -188,7 +187,6 @@ function displayButtons(categories) {
 }
 
 // Étape 4 : Ajouter les méthodes display pour afficher un travail de plus
-
 function displayOneWorks(work) {
   allWorks.push(work);
   const galleryIndex = document.getElementById("galleryIndex");
@@ -352,7 +350,7 @@ const displayModal = () => {
     const modal = document.getElementById("myModal");
     const modalBackground = document.getElementById("modalBackground");
 
-    // Réinitialiser les champs du formulaire
+    // Réinitialise les champs du formulaire
     document.querySelector(".title-photo-modal").value = "";
     document.querySelector(".category-photo-modal").value = "";
     document.getElementById("fileInput").value = "";
@@ -482,6 +480,7 @@ const changeModalContent = () => {
   // Ajout d'un gestionnaire d'événements pour le clic sur l'icône de retour
   returnArrow.addEventListener("click", function () {
     console.log("🚀 ~ returnArrow:", returnArrow);
+    resetModalFields();
   });
 };
 
@@ -590,59 +589,60 @@ validationButton.addEventListener("click", function () {
 
 // Écouteur d'événement pour vérifier les champs lors de la saisie
 fileInput.addEventListener("change", function () {
-  // toggleSubmitButton();
   checkForm();
 });
 titleInput.addEventListener("input", function () {
-  // toggleSubmitButton();
   checkForm();
 });
 categorySelect.addEventListener("change", function () {
-  // toggleSubmitButton();
   checkForm();
 });
 
-document.getElementById("submit-btn").addEventListener("click", async () => {
-  // Récupère le titre saisi par l'utilisateur
-  const titleElement = document.querySelector(".title-photo");
-  const category = document.querySelector(".category-photo").value;
-  console.log("🚀 ~ document.getElementById ~ category:", category);
-  const title = titleElement ? titleElement.value.trim() : "";
-  console.log("🚀 ~ document.getElementById ~ title:", title);
+document
+  .getElementById("submit-btn")
+  .addEventListener("click", async (event) => {
+    // Empêche le comportement par défaut du formulaire (rechargement de la page)
+    event.preventDefault();
+    // Récupère le titre saisi par l'utilisateur
+    const titleElement = document.querySelector(".title-photo");
+    const category = document.querySelector(".category-photo").value;
+    console.log("🚀 ~ document.getElementById ~ category:", category);
+    const title = titleElement ? titleElement.value.trim() : "";
+    console.log("🚀 ~ document.getElementById ~ title:", title);
 
-  // Envoie des données au backend --------------> utiliser la methode formData <--------------
-  const file = fileInput.files[0];
+    // Envoie des données au backend
+    const file = fileInput.files[0];
 
-  // Crée un objet FormData pour envoyer les données au backend
-  const formData = new FormData();
+    // Crée un objet FormData pour envoyer les données au backend
+    const formData = new FormData();
 
-  formData.append("title", title);
-  formData.append("category", Number(category));
-  formData.append("image", file);
+    formData.append("title", title);
+    formData.append("category", Number(category));
+    formData.append("image", file);
 
-  try {
-    // Envoie les données au backend via une requête POST
-    const response = await fetch("http://localhost:5678/api/works", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${globalToken}`,
-      },
-      body: formData,
-    });
+    try {
+      // Envoie les données au backend via une requête POST
+      const response = await fetch("http://localhost:5678/api/works", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${globalToken}`,
+        },
+        body: formData,
+      });
 
-    if (response.ok) {
-      // Si la requête est réussie, recharge la galerie pour afficher le nouveau média
-      closeModalAndReset(); // Ferme la modale et réinitialise les champs
-      let backReturn = await response.json();
-      displayOneWorks(backReturn);
-      console.log("🚀 ~ document.getElementById ~ backReturn:", backReturn);
-    } else {
-      console.error("Erreur lors de l'envoi des données au backend.");
+      if (response.ok) {
+        // Si la requête est réussie, recharge la galerie pour afficher le nouveau média
+        closeModalAndReset(); // Ferme la modale et réinitialise les champs
+        let backReturn = await response.json();
+        displayOneWorks(backReturn);
+        console.log("🚀 ~ document.getElementById ~ backReturn:", backReturn);
+      } else {
+        console.error("Erreur lors de l'envoi des données au backend.");
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'envoi des données au backend :", error);
     }
-  } catch (error) {
-    console.error("Erreur lors de l'envoi des données au backend :", error);
-  }
-});
+  });
 
 // Fonction pour réinitialiser les champs titre et catégorie de la modale
 function resetModalFields() {
@@ -717,3 +717,16 @@ function drawOnCanvas(file) {
   reader.readAsDataURL(file);
   console.log("Image chargée dans le canvas avec succès !");
 }
+
+// Mise en place d'un focus lorsque l'on clique sur "Catégorie" dans la modale
+// Sélection de l'élément label
+const labelCat = document.querySelector('label[for="inputCat"]');
+
+// Sélection de l'élément select correspondant
+const selectCat = document.getElementById("inputCat");
+
+// Ajout d'un gestionnaire d'événements au clic sur le label
+labelCat.addEventListener("click", () => {
+  // Défini le focus sur le select
+  selectCat.focus();
+});
