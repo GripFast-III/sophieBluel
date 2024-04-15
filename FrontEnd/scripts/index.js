@@ -305,10 +305,13 @@ const displayModal = () => {
   // Suppression des médias depuis une route vers le Backend
   trashIcons.forEach((trashIcon) => {
     trashIcon.addEventListener("click", async function (e) {
+      console.log("Clic détecté sur l'icône de poubelle");
+      e.preventDefault(); // Empêche le comportement par défaut du clic <---------- Ne fonctionne pas
+
       const workId = e.target.dataset.id; // Récupère l'ID du travail à supprimer
       const figures = document.querySelectorAll(`figure[data-id="${workId}"]`);
-
       console.log("🚀 ~ figures:", figures);
+
       try {
         const response = await fetch(
           `http://localhost:5678/api/works/${workId}`,
@@ -365,7 +368,7 @@ const displayModal = () => {
   };
 
   // Empêche le rechargement de la page
-  event.preventDefault();
+  //event.preventDefault();
 
   // Ajoute un événement de clic à la modale pour empêcher la propagation des clics aux éléments enfants
   modal.addEventListener("click", function (event) {
@@ -602,7 +605,7 @@ document
   .getElementById("submit-btn")
   .addEventListener("click", async (event) => {
     // Empêche le comportement par défaut du formulaire (rechargement de la page)
-    event.preventDefault();
+    //event.preventDefault();
     // Récupère le titre saisi par l'utilisateur
     const titleElement = document.querySelector(".title-photo");
     const category = document.querySelector(".category-photo").value;
