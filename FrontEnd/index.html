@@ -72,8 +72,7 @@
                 <hr class="separator" />
                 <div class="submitted">
                   <button
-                    class="btn-submit"
-                    class="btn-close"
+                    class="btn-submit btn-close"
                     id="add-pictures"
                     type="submit"
                   >
@@ -120,17 +119,17 @@
                   <div class="text-and-category">
                     <div class="text-photo">
                       <div class="title-photo-modal">
-                        <h3>Titre</h3>
-                        <input class="title-photo" />
+                        <label for="titleValue">Titre</label>
+                        <input id="titleValue" class="title-photo" />
                       </div>
                       <div id="title-error" class="error-message"></div>
                     </div>
 
                     <div class="text-category">
                       <div class="category-photo-modal">
-                        <h3>Catégorie</h3>
-                        <select class="category-photo">
-                          <option value="0" selected></option>
+                        <label for="catValue">Catégorie</label>
+                        <select id="catValue" class="category-photo">
+                          <option value="0" selected>—</option>
                           <option value="1">Objet</option>
                           <option value="2">Appartements</option>
                           <option value="3">Hotel & restaurants</option>

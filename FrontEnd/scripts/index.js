@@ -187,6 +187,7 @@ function displayButtons(categories) {
 }
 
 // Étape 4 : Ajouter les méthodes display pour afficher un travail de plus
+
 function displayOneWorks(work) {
   allWorks.push(work);
   const galleryIndex = document.getElementById("galleryIndex");
@@ -592,60 +593,52 @@ validationButton.addEventListener("click", function () {
 
 // Écouteur d'événement pour vérifier les champs lors de la saisie
 fileInput.addEventListener("change", function () {
+  // toggleSubmitButton();
   checkForm();
 });
 titleInput.addEventListener("input", function () {
+  // toggleSubmitButton();
   checkForm();
 });
 categorySelect.addEventListener("change", function () {
+  // toggleSubmitButton();
   checkForm();
 });
 
-document
-  .getElementById("submit-btn")
-  .addEventListener("click", async (event) => {
-    // Empêche le comportement par défaut du formulaire (rechargement de la page)
-    //event.preventDefault();
-    // Récupère le titre saisi par l'utilisateur
-    const titleElement = document.querySelector(".title-photo");
-    const category = document.querySelector(".category-photo").value;
-    console.log("🚀 ~ document.getElementById ~ category:", category);
-    const title = titleElement ? titleElement.value.trim() : "";
-    console.log("🚀 ~ document.getElementById ~ title:", title);
+document.getElementById("submit-btn").addEventListener("click", async () => {
+  // Récupère le titre saisi par l'utilisateur
+  const titleElement = document.querySelector(".title-photo");
+  const category = document.querySelector(".category-photo").value;
+  const title = titleElement ? titleElement.value.trim() : "";
 
-    // Envoie des données au backend
-    const file = fileInput.files[0];
+  // Envoie des données au backend
+  const file = fileInput.files[0];
 
-    // Crée un objet FormData pour envoyer les données au backend
-    const formData = new FormData();
+  // Crée un objet FormData pour envoyer les données au backend
+  const formData = new FormData();
 
-    formData.append("title", title);
-    formData.append("category", Number(category));
-    formData.append("image", file);
+  formData.append("title", title);
+  formData.append("category", Number(category));
+  formData.append("image", file);
 
-    try {
-      // Envoie les données au backend via une requête POST
-      const response = await fetch("http://localhost:5678/api/works", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${globalToken}`,
-        },
-        body: formData,
-      });
-
-      if (response.ok) {
-        // Si la requête est réussie, recharge la galerie pour afficher le nouveau média
-        closeModalAndReset(); // Ferme la modale et réinitialise les champs
-        let backReturn = await response.json();
-        displayOneWorks(backReturn);
-        console.log("🚀 ~ document.getElementById ~ backReturn:", backReturn);
-      } else {
-        console.error("Erreur lors de l'envoi des données au backend.");
-      }
-    } catch (error) {
-      console.error("Erreur lors de l'envoi des données au backend :", error);
-    }
+  // Envoie les données au backend via une requête POST
+  const response = await fetch("http://localhost:5678/api/works", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${globalToken}`,
+    },
+    body: formData,
   });
+
+  if (response.ok) {
+    // Si la requête est réussie, recharge la galerie pour afficher le nouveau média
+    closeModalAndReset(); // Ferme la modale et réinitialise les champs
+    let backReturn = await response.json();
+    displayOneWorks(backReturn);
+  } else {
+    console.error("Erreur lors de l'envoi des données au backend.");
+  }
+});
 
 // Fonction pour réinitialiser les champs titre et catégorie de la modale
 function resetModalFields() {
