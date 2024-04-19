@@ -116,12 +116,15 @@ nav ul {
 
 }
 nav li {
-	padding: 0 10px;
+	padding: 0 20px;
 	font-size: 1.2em;
 }
 
 li:hover {
 	color: #B1663C;
+}
+nav ul li img {
+	width: 20px;
 }
 
 .link{
@@ -229,13 +232,17 @@ button:hover {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
 	grid-column-gap: 20px;
-	grid-row-gap: 20px;
+	grid-row-gap: 35px;
 }
 
 .gallery-index img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;	
+}
+
+#galleryIndex figure figcaption {
+	margin-top: 5px;
 }
 #contact {
 	width: 50%;
@@ -420,8 +427,11 @@ footer nav ul:hover{
 .btn-submit {
 	background-color: rgb(255, 255, 255);
 }
-
-#submit-btn:hover {
+.btn-submit.disabled {
+	cursor: not-allowed;
+	pointer-events: none;
+}
+#submit-btn:not(.disabled):hover {
 	background-color: #1D6154;
 }
 
@@ -539,8 +549,8 @@ footer nav ul:hover{
 }
 
 .text-and-category label {
-	margin-bottom: 5%;
-	width: 60%;
+	margin-bottom: 2%;
+	width: 65%;
 }
 
 .search-photo {
@@ -552,9 +562,9 @@ footer nav ul:hover{
 	/*margin-bottom: 25px;*/
 }
 
-.search-photo:hover {
+/*.search-photo:hover {
 	cursor: pointer;
-}
+}*/
 
 .search-photo label {
 	display: flex;
@@ -563,6 +573,9 @@ footer nav ul:hover{
 	width: 65%;
 	background-color: rgba(232, 241, 246, 1);
 	align-self: center;
+}
+.search-photo label:hover{
+	cursor: pointer;
 }
 
 #initialImg {
@@ -594,7 +607,7 @@ footer nav ul:hover{
 	border: 1px solid transparent;
 	box-shadow:  2px 2px 14px -4px;
 	height: 51px;
-	width: 60%;
+	width: 65%;
 }
 
 .error-message {
@@ -612,13 +625,14 @@ footer nav ul:hover{
 	align-items: center;
 	width: 100%;
 	border: none;
+	margin-bottom: 10px;
 }
 
 .category-photo {
 	background-color: white;
 	box-shadow: 2px 2px 14px -4px;
 	height: 51px;
-	width: 60%;
+	width: 65%;
 	border: none;
 	margin-bottom: 3%;
 }
